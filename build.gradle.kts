@@ -33,6 +33,8 @@ jacoco {
 
 checkstyle {
     toolVersion = "11.0.0"
+    configProperties["org.checkstyle.google.suppressionfilter.config"] =
+        file("config/checkstyle/suppressions.xml").absolutePath
 }
 
 spotless {
@@ -94,4 +96,20 @@ tasks.jacocoTestReport {
 
 tasks.register("codeQuality") {
     dependsOn(tasks.named("pmdMain"), tasks.named("spotbugsMain"))
+}
+
+tasks.register("preCommitCheck") {
+    group = "verification"
+    description = "Executa verificação antes do commit"
+    dependsOn("spotlessApply", "checkstyleMain", "test")
+}
+
+tasks.register<Copy>("installGitHooks") {
+    from(file("scripts/pre-commit"))
+    into(file(".git/hooks"))
+    fileMode = 0b111101101 // 755
+}
+
+tasks.named("build") {
+    dependsOn("installGitHooks")
 }
