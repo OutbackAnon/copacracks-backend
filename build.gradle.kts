@@ -1,8 +1,6 @@
 group = "com.copacracks"
 version = "1.0-SNAPSHOT"
 
-//val libs = extensions.getByType(VersionCatalogsExtension::class.java).named("libs")
-
 plugins {
     id("java")
     alias(libs.plugins.spotless)
@@ -20,7 +18,6 @@ pmd {
 }
 
 spotbugs {
-//    toolVersion = "4.9.4"
     effort.set(com.github.spotbugs.snom.Effort.MAX)
     reportLevel.set(com.github.spotbugs.snom.Confidence.HIGH)
     ignoreFailures.set(false)
