@@ -3,22 +3,22 @@ version = "1.0-SNAPSHOT"
 
 plugins {
     id("java")
+    id("com.diffplug.spotless") version "7.2.1"
+    id("com.github.spotbugs") version "6.2.4"
     checkstyle
-    id("com.diffplug.spotless") version "6.20.0"
     jacoco
     pmd
-    id("com.github.spotbugs") version "5.0.13"
 }
 
 pmd {
-    toolVersion = "6.56.0"
+    toolVersion = "7.16.0"
     ruleSets = listOf("category/java/bestpractices.xml", "category/java/codestyle.xml")
     isConsoleOutput = true
     isIgnoreFailures = false
 }
 
 spotbugs {
-    toolVersion = "4.7.3"
+//    toolVersion = "4.9.4"
     effort.set(com.github.spotbugs.snom.Effort.MAX)
     reportLevel.set(com.github.spotbugs.snom.Confidence.HIGH)
     ignoreFailures.set(false)
@@ -31,7 +31,6 @@ jacoco {
 
 checkstyle {
     toolVersion = "11.0.0"
-    configFile = file("config/checkstyle/checkstyle.xml")
 }
 
 spotless {
@@ -50,6 +49,8 @@ dependencies {
 
     implementation("com.google.googlejavaformat:google-java-format:1.28.0")
     implementation("com.puppycrawl.tools:checkstyle:11.0.0")
+
+    spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.12.0")
 
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -88,4 +89,8 @@ tasks.jacocoTestReport {
         html.required.set(true)
         html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco"))
     }
+}
+
+tasks.register("codeQuality") {
+    dependsOn(tasks.named("pmdMain"), tasks.named("spotbugsMain"))
 }
