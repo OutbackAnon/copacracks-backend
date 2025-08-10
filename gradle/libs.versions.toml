@@ -1,0 +1,19 @@
+[versions]
+spotless = "7.2.1"
+spotbugs = "6.2.4"
+javalin = "6.7.0"
+google-java-format = "1.28.0"
+checkstyle = "11.0.0"
+findsecbugs-plugin = "1.12.0"
+junit = "5.9.1"
+
+[libraries]
+javalin-bundle = { module = "io.javalin:javalin-bundle", version.ref = "javalin" }
+google-java-format = { module = "com.google.googlejavaformat:google-java-format", version.ref = "google-java-format" }
+checkstyle = { module = "com.puppycrawl.tools:checkstyle", version.ref = "checkstyle" }
+findsecbugs-plugin = { module = "com.h3xstream.findsecbugs:findsecbugs-plugin", version.ref = "findsecbugs-plugin" }
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+
+[plugins]
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugs" }

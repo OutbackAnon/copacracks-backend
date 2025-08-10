@@ -1,10 +1,12 @@
 group = "com.copacracks"
 version = "1.0-SNAPSHOT"
 
+//val libs = extensions.getByType(VersionCatalogsExtension::class.java).named("libs")
+
 plugins {
     id("java")
-    id("com.diffplug.spotless") version "7.2.1"
-    id("com.github.spotbugs") version "6.2.4"
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.spotbugs)
     checkstyle
     jacoco
     pmd
@@ -45,14 +47,13 @@ repositories {
 }
 
 dependencies {
-    implementation("io.javalin:javalin-bundle:6.7.0")
+    implementation(libs.javalin.bundle)
+    implementation(libs.google.java.format)
+    implementation(libs.checkstyle)
 
-    implementation("com.google.googlejavaformat:google-java-format:1.28.0")
-    implementation("com.puppycrawl.tools:checkstyle:11.0.0")
+    spotbugsPlugins(libs.findsecbugs.plugin)
 
-    spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.12.0")
-
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    testImplementation(platform(libs.junit.bom))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
