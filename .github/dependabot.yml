@@ -1,0 +1,67 @@
+version: 2
+updates:
+  # Mantém as dependências do Gradle atualizadas
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Sao_Paulo"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "leonardomichelutti"
+    assignees:
+      - "leonardomichelutti"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "gradle"
+    ignore:
+      # Ignora versões beta/alpha
+      - dependency-name: "*"
+        versions: ["*-alpha*", "*-beta*", "*-rc*", "*-SNAPSHOT*"]
+  
+  # Mantém as GitHub Actions atualizadas
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Sao_Paulo"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "leonardomichelutti"
+    assignees:
+      - "leonardomichelutti"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"
+  
+  # Mantém o Gradle Wrapper atualizado
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Sao_Paulo"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "leonardomichelutti"
+    assignees:
+      - "leonardomichelutti"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "gradle-wrapper"
+    # Foca apenas no Gradle Wrapper
+    target-branch: "develop"

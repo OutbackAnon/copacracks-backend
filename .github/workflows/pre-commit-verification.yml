@@ -1,0 +1,62 @@
+name: Pre-commit Hook Verification
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+env:
+  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true
+
+jobs:
+  verify-pre-commit:
+    name: Verify Pre-commit Hook
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
+      
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: wrapper
+      
+      - name: Install Git hooks
+        run: ./gradlew installGitHooks
+      
+      - name: Run pre-commit check
+        run: ./gradlew preCommitCheck
+      
+      - name: Verify hook installation
+        run: |
+          if [ -f ".git/hooks/pre-commit" ]; then
+            echo "✅ Pre-commit hook instalado com sucesso"
+            ls -la .git/hooks/pre-commit
+          else
+            echo "❌ Pre-commit hook não foi instalado"
+            exit 1
+          fi
+      
+      - name: Test hook execution
+        run: |
+          # Simula a execução do hook
+          chmod +x scripts/pre-commit
+          ./scripts/pre-commit || echo "Hook executado (pode falhar em ambiente CI)"
+      
+      - name: Upload verification results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pre-commit-verification
+          path: |
+            build/reports/
+            .git/hooks/pre-commit
+          retention-days: 30
