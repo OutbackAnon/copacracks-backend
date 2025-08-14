@@ -46,20 +46,10 @@ public record Email(String value) {
     }
   }
 
-  /**
-   * Retorna o domínio do email.
-   *
-   * @return domínio do email
-   */
   public String getDomain() {
     return value.substring(value.indexOf('@') + 1);
   }
 
-  /**
-   * Retorna o nome de usuário do email.
-   *
-   * @return nome de usuário do email
-   */
   public String getUsername() {
     return value.substring(0, value.indexOf('@'));
   }

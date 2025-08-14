@@ -8,7 +8,6 @@ import java.util.Objects;
  * relacionadas ao usuário.
  */
 public class User {
-
   private final Long id;
   private Username username;
   private Password password;
@@ -106,7 +105,6 @@ public class User {
     return this.id == null;
   }
 
-  // Getters
   public Long getId() {
     return id;
   }
@@ -130,7 +128,6 @@ public class User {
 
     User user = (User) obj;
 
-    // Usuários são iguais se tiverem o mesmo ID ou o mesmo username/email
     if (id != null && user.id != null) {
       return Objects.equals(id, user.id);
     }

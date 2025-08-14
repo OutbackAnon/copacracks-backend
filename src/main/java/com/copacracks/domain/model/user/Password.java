@@ -5,6 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.regex.Pattern;
 
 /**
  * Value Object para representar uma senha usando record. Encapsula a lógica de validação e
@@ -15,6 +16,11 @@ public record Password(String hashedValue, String salt) {
 
   private static final int MIN_LENGTH = 8;
   private static final int SALT_LENGTH = 16;
+  private static final Pattern UPPERCASE = Pattern.compile("[A-Z]");
+  private static final Pattern LOWERCASE = Pattern.compile("[a-z]");
+  private static final Pattern DIGIT = Pattern.compile("\\d");
+  private static final Pattern SPECIAL_CHAR =
+      Pattern.compile("[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]");
 
   /**
    * Construtor canônico com validação. Todas as instâncias de Password passarão por esta validação,
@@ -72,19 +78,19 @@ public record Password(String hashedValue, String salt) {
       throw new UserValidationException("Senha deve ter pelo menos " + MIN_LENGTH + " caracteres");
     }
 
-    if (!plainPassword.matches(".*[A-Z].*")) {
+    if (!UPPERCASE.matcher(plainPassword).find()) {
       throw new UserValidationException("Senha deve conter pelo menos uma letra maiúscula");
     }
 
-    if (!plainPassword.matches(".*[a-z].*")) {
+    if (!LOWERCASE.matcher(plainPassword).find()) {
       throw new UserValidationException("Senha deve conter pelo menos uma letra minúscula");
     }
 
-    if (!plainPassword.matches(".*\\d.*")) {
+    if (!DIGIT.matcher(plainPassword).find()) {
       throw new UserValidationException("Senha deve conter pelo menos um número");
     }
 
-    if (!plainPassword.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*")) {
+    if (!SPECIAL_CHAR.matcher(plainPassword).find()) {
       throw new UserValidationException("Senha deve conter pelo menos um caractere especial");
     }
   }
