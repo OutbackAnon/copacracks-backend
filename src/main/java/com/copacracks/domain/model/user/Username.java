@@ -1,5 +1,7 @@
 package com.copacracks.domain.model.user;
 
+import java.util.regex.Pattern;
+
 import com.copacracks.domain.exception.UserValidationException;
 
 /**
@@ -9,12 +11,13 @@ import com.copacracks.domain.exception.UserValidationException;
 public record Username(String value) {
   private static final int MIN_LENGTH = 3;
   private static final int MAX_LENGTH = 50;
+  private static final Pattern USERNAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_]+$");
 
   /**
    * Construtor canônico com validação. Todas as instâncias de Username passarão por esta validação,
    * independentemente de como forem criadas.
    */
-  public Username(String value) {
+  public Username(final String value) {
     validateUsername(value);
     this.value = value.trim();
   }
@@ -34,12 +37,12 @@ public record Username(String value) {
    * @param username valor a ser validado
    * @throws UserValidationException se o username for inválido
    */
-  private void validateUsername(String username) {
+  private void validateUsername(final String username) {
     if (username == null || username.trim().isEmpty()) {
       throw new UserValidationException("Nome de usuário não pode ser vazio");
     }
 
-    String trimmedUsername = username.trim();
+    final String trimmedUsername = username.trim();
 
     if (trimmedUsername.length() < MIN_LENGTH) {
       throw new UserValidationException(
@@ -51,7 +54,7 @@ public record Username(String value) {
           "Nome de usuário deve ter no máximo " + MAX_LENGTH + " caracteres");
     }
 
-    if (!trimmedUsername.matches("^[a-zA-Z0-9_]+$")) {
+    if (!USERNAME_PATTERN.matcher(trimmedUsername).matches()) {
       throw new UserValidationException(
           "Nome de usuário deve conter apenas letras, números e underscore");
     }

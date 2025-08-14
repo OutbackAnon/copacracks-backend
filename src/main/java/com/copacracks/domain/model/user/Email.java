@@ -15,7 +15,7 @@ public record Email(String value) {
    * Construtor canônico com validação. Todas as instâncias de Email passarão por esta validação,
    * independentemente de como forem criadas.
    */
-  public Email(String value) {
+  public Email(final String value) {
     validateEmail(value);
     this.value = value.trim().toLowerCase();
   }
@@ -35,12 +35,12 @@ public record Email(String value) {
    * @param email valor a ser validado
    * @throws UserValidationException se o email for inválido
    */
-  private void validateEmail(String email) {
+  private void validateEmail(final String email) {
     if (email == null || email.trim().isEmpty()) {
       throw new UserValidationException("Email não pode ser vazio");
     }
 
-    String trimmedEmail = email.trim();
+    final String trimmedEmail = email.trim();
     if (!EMAIL_PATTERN.matcher(trimmedEmail).matches()) {
       throw new UserValidationException("Email deve ter um formato válido");
     }

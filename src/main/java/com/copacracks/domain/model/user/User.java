@@ -9,9 +9,9 @@ import java.util.Objects;
  */
 public class User {
   private final Long id;
-  private Username username;
-  private Password password;
-  private Email email;
+  private final Username username;
+  private final Password password;
+  private final Email email;
 
   /**
    * Construtor para criação de novo usuário.
@@ -21,7 +21,7 @@ public class User {
    * @param email email
    * @throws UserValidationException se os parâmetros forem inválidos
    */
-  public User(String username, String password, String email) {
+  public User(final String username, final String password, final String email) {
     this(null, username, password, email);
   }
 
@@ -34,7 +34,7 @@ public class User {
    * @param email email
    * @throws UserValidationException se os parâmetros forem inválidos
    */
-  public User(Long id, String username, String password, String email) {
+  public User(final Long id, final String username, final String password, final String email) {
     this.id = id;
     this.username = new Username(username);
     this.password = Password.fromPlainText(password);
@@ -49,7 +49,7 @@ public class User {
    * @param password senha já criptografada
    * @param email email já validado
    */
-  public User(Long id, Username username, Password password, Email email) {
+  public User(final Long id, final Username username, final Password password, final Email email) {
     this.id = id;
     this.username = username;
     this.password = password;
@@ -62,7 +62,7 @@ public class User {
    * @param newPassword nova senha
    * @throws UserValidationException se a nova senha for inválida
    */
-  public User withNewPassword(String newPassword) {
+  public User withNewPassword(final String newPassword) {
     return new User(this.id, this.username, Password.fromPlainText(newPassword), this.email);
   }
 
@@ -72,7 +72,7 @@ public class User {
    * @param newEmail novo email
    * @throws UserValidationException se o novo email for inválido
    */
-  public User withNewEmail(String newEmail) {
+  public User withNewEmail(final String newEmail) {
     return new User(this.id, this.username, this.password, new Email(newEmail));
   }
 
@@ -82,7 +82,7 @@ public class User {
    * @param newUsername novo nome de usuário
    * @throws UserValidationException se o novo nome de usuário for inválido
    */
-  public User withNewUsername(String newUsername) {
+  public User withNewUsername(final String newUsername) {
     return new User(this.id, new Username(newUsername), this.password, this.email);
   }
 
@@ -92,7 +92,7 @@ public class User {
    * @param password senha a ser verificada
    * @return true se a senha corresponder, false caso contrário
    */
-  public boolean isPasswordValid(String password) {
+  public boolean isPasswordValid(final String password) {
     return this.password.matches(password);
   }
 
@@ -122,11 +122,11 @@ public class User {
   }
 
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(final Object obj) {
     if (this == obj) return true;
     if (obj == null || getClass() != obj.getClass()) return false;
 
-    User user = (User) obj;
+    final User user = (User) obj;
 
     if (id != null && user.id != null) {
       return Objects.equals(id, user.id);

@@ -1,6 +1,8 @@
 package com.copacracks.domain.model.user;
 
 import com.copacracks.domain.exception.UserValidationException;
+
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -43,10 +45,10 @@ public record Password(String hashedValue, String salt) {
    * @return nova instância de Password com senha criptografada
    * @throws UserValidationException se a senha for inválida
    */
-  public static Password fromPlainText(String plainPassword) {
+  public static Password fromPlainText(final String plainPassword) {
     validatePlainPassword(plainPassword);
-    String salt = generateSalt();
-    String hashedValue = hashPassword(plainPassword, salt);
+    final String salt = generateSalt();
+    final String hashedValue = hashPassword(plainPassword, salt);
     return new Password(hashedValue, salt);
   }
 
@@ -59,7 +61,7 @@ public record Password(String hashedValue, String salt) {
    * @return nova instância de Password
    * @throws UserValidationException se os valores forem inválidos
    */
-  public static Password fromHash(String hashedValue, String salt) {
+  public static Password fromHash(final String hashedValue, final String salt) {
     return new Password(hashedValue, salt);
   }
 
@@ -69,7 +71,7 @@ public record Password(String hashedValue, String salt) {
    * @param plainPassword senha a ser validada
    * @throws UserValidationException se a senha for inválida
    */
-  private static void validatePlainPassword(String plainPassword) {
+  private static void validatePlainPassword(final String plainPassword) {
     if (plainPassword == null || plainPassword.isEmpty()) {
       throw new UserValidationException("Senha não pode ser vazia");
     }
@@ -101,8 +103,8 @@ public record Password(String hashedValue, String salt) {
    * @return salt gerado
    */
   private static String generateSalt() {
-    SecureRandom random = new SecureRandom();
-    byte[] saltBytes = new byte[SALT_LENGTH];
+    final SecureRandom random = new SecureRandom();
+    final byte[] saltBytes = new byte[SALT_LENGTH];
     random.nextBytes(saltBytes);
     return Base64.getEncoder().encodeToString(saltBytes);
   }
@@ -114,11 +116,11 @@ public record Password(String hashedValue, String salt) {
    * @param salt salt a ser usado
    * @return senha criptografada
    */
-  private static String hashPassword(String plainPassword, String salt) {
+  private static String hashPassword(final String plainPassword, final String salt) {
     try {
-      MessageDigest md = MessageDigest.getInstance("SHA-256");
-      String saltedPassword = plainPassword + salt;
-      byte[] hashedBytes = md.digest(saltedPassword.getBytes());
+      final MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+      final String saltedPassword = plainPassword + salt;
+      final byte[] hashedBytes = messageDigest.digest(saltedPassword.getBytes(StandardCharsets.UTF_8));
       return Base64.getEncoder().encodeToString(hashedBytes);
     } catch (NoSuchAlgorithmException e) {
       throw new UserValidationException("Erro ao criptografar senha", e);
@@ -131,11 +133,11 @@ public record Password(String hashedValue, String salt) {
    * @param plainPassword senha em texto plano a ser verificada
    * @return true se a senha corresponder, false caso contrário
    */
-  public boolean matches(String plainPassword) {
+  public boolean matches(final String plainPassword) {
     if (plainPassword == null) {
       return false;
     }
-    String hashedInput = hashPassword(plainPassword, this.salt);
+    final String hashedInput = hashPassword(plainPassword, this.salt);
     return this.hashedValue.equals(hashedInput);
   }
 
@@ -156,7 +158,7 @@ public record Password(String hashedValue, String salt) {
    * @param plainPassword senha a ser testada
    * @return true se a senha for válida
    */
-  public static boolean isValidPlainPassword(String plainPassword) {
+  public static boolean isValidPlainPassword(final String plainPassword) {
     try {
       validatePlainPassword(plainPassword);
       return true;
