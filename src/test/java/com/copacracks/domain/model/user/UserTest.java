@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.copacracks.domain.exception.UserValidationException;
 import org.junit.jupiter.api.Test;
 
-/** Testes para o modelo de usuário. */
 class UserTest {
   @Test
   void shouldCreateValidUser() {
@@ -118,11 +117,10 @@ class UserTest {
     User updatedUser = user.withNewPassword(newPassword);
 
     // Then
-    assertTrue(updatedUser.isPasswordValid(newPassword));
-    assertFalse(updatedUser.isPasswordValid("SecurePass123!"));
-    // O usuário original não deve ser alterado
-    assertFalse(user.isPasswordValid(newPassword));
-    assertTrue(user.isPasswordValid("SecurePass123!"));
+    assertTrue(updatedUser.getPassword().matches(newPassword));
+    assertFalse(updatedUser.getPassword().matches("SecurePass123!"));
+    assertFalse(user.getPassword().matches(newPassword));
+    assertTrue(user.getPassword().matches("SecurePass123!"));
   }
 
   @Test

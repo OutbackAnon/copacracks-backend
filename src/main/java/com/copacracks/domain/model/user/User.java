@@ -37,7 +37,7 @@ public class User {
   public User(final Long id, final String username, final String password, final String email) {
     this.id = id;
     this.username = new Username(username);
-    this.password = Password.fromPlainText(password);
+    this.password = new Password(password);
     this.email = new Email(email);
   }
 
@@ -63,7 +63,7 @@ public class User {
    * @throws UserValidationException se a nova senha for inválida
    */
   public User withNewPassword(final String newPassword) {
-    return new User(this.id, this.username, Password.fromPlainText(newPassword), this.email);
+    return new User(this.id, this.username, new Password(newPassword), this.email);
   }
 
   /**
@@ -86,15 +86,6 @@ public class User {
     return new User(this.id, new Username(newUsername), this.password, this.email);
   }
 
-  /**
-   * Verifica se a senha fornecida corresponde à senha do usuário.
-   *
-   * @param password senha a ser verificada
-   * @return true se a senha corresponder, false caso contrário
-   */
-  public boolean isPasswordValid(final String password) {
-    return this.password.matches(password);
-  }
 
   /**
    * Verifica se o usuário é novo (ainda não possui ID).
@@ -114,7 +105,7 @@ public class User {
   }
 
   public String getPassword() {
-    return password.hashedValue();
+    return password.value();
   }
 
   public String getEmail() {
