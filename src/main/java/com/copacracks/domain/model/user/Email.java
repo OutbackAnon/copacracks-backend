@@ -38,10 +38,6 @@ public record Email(String value) {
    * @throws UserValidationException se o email for inválido
    */
   private void validateEmail(final String email) {
-    if (email.isEmpty()) {
-      throw new UserValidationException("Email não pode ser vazio");
-    }
-
     if (email == null || email.isBlank()) {
       throw new UserValidationException("Email não pode ser vazio");
     }
