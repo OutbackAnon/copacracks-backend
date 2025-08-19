@@ -37,22 +37,33 @@ public record Username(String value) {
    * @throws UserValidationException se o username for inválido
    */
   private void validateUsername(final String username) {
-    if (username == null || username.trim().isEmpty()) {
-      throw new UserValidationException("Nome de usuário não pode ser vazio");
-    }
+    ensureNotBlank(username);
 
     final String trimmedUsername = username.trim();
 
-    if (trimmedUsername.length() < MIN_LENGTH) {
+    ensureLengthWithinBounds(trimmedUsername);
+    ensureMatchesPattern(trimmedUsername);
+  }
+
+  private static void ensureNotBlank(final String username) {
+    if (username == null || username.isBlank()) {
+      throw new UserValidationException("Nome de usuário não pode ser vazio");
+    }
+  }
+
+  private static void ensureLengthWithinBounds(final String trimmedUsername) {
+    final int length = trimmedUsername.length();
+    if (length < MIN_LENGTH) {
       throw new UserValidationException(
           "Nome de usuário deve ter pelo menos " + MIN_LENGTH + " caracteres");
     }
-
-    if (trimmedUsername.length() > MAX_LENGTH) {
+    if (length > MAX_LENGTH) {
       throw new UserValidationException(
           "Nome de usuário deve ter no máximo " + MAX_LENGTH + " caracteres");
     }
+  }
 
+  private static void ensureMatchesPattern(final String trimmedUsername) {
     if (!USERNAME_PATTERN.matcher(trimmedUsername).matches()) {
       throw new UserValidationException(
           "Nome de usuário deve conter apenas letras, números e underscore");

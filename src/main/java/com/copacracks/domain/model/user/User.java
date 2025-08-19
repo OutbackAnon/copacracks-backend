@@ -57,6 +57,24 @@ public class User {
   }
 
   /**
+ * Checks if the provided password matches the stored password.
+ * This method handles cases where the provided password might be null.
+ *
+ * @param plainPassword the plain text password to be validated.
+ * @return {@code true} if the provided password is valid and matches the stored password;
+ * {@code false} otherwise, including if the provided or stored password is null.
+ */
+  public boolean isPasswordValid(final String plainPassword) {
+    boolean result = false;
+
+    if (plainPassword != null && this.password != null) {
+      result = this.password.value().matches(plainPassword);
+  }
+
+    return result;
+  }
+
+  /**
    * Altera a senha do usuário.
    *
    * @param newPassword nova senha
@@ -104,34 +122,44 @@ public class User {
     return username.value();
   }
 
-  public String getPassword() {
-    return password.value();
-  }
-
   public String getEmail() {
     return email.value();
   }
 
   @Override
   public boolean equals(final Object obj) {
-    if (this == obj) return true;
-    if (obj == null || getClass() != obj.getClass()) return false;
-
-    final User user = (User) obj;
-
-    if (id != null && user.id != null) {
-      return Objects.equals(id, user.id);
-    }
-
-    return Objects.equals(username, user.username) || Objects.equals(email, user.email);
+      boolean result = false;
+      
+      if (this == obj) {
+          result = true;
+      } else if (obj != null && getClass() == obj.getClass()) {
+          final User user = (User) obj;
+          
+          // Se ambos têm ID, compara apenas por ID
+          if (id != null && user.id != null) {
+              result = Objects.equals(id, user.id);
+          } else {
+              // Se não têm ID, todos os campos devem ser iguais (AND, não OR)
+              result = Objects.equals(username, user.username) && 
+                      Objects.equals(password, user.password) &&
+                      Objects.equals(email, user.email);
+          }
+      }
+      
+      return result;
   }
 
   @Override
   public int hashCode() {
-    if (id != null) {
-      return Objects.hash(id);
-    }
-    return Objects.hash(username, email);
+      final int result;
+      
+      if (id != null) {
+          result = Objects.hash(id);
+      } else {
+          result = Objects.hash(username, password, email);
+      }
+      
+      return result;
   }
 
   @Override

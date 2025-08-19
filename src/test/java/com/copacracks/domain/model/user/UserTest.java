@@ -109,18 +109,25 @@ class UserTest {
 
   @Test
   void shouldChangePassword() {
-    // Given
-    User user = new User("john_doe", "SecurePass123!", "john@example.com");
-    String newPassword = "NewSecurePass456!";
-
-    // When
-    User updatedUser = user.withNewPassword(newPassword);
-
-    // Then
-    assertTrue(updatedUser.getPassword().matches(newPassword));
-    assertFalse(updatedUser.getPassword().matches("SecurePass123!"));
-    assertFalse(user.getPassword().matches(newPassword));
-    assertTrue(user.getPassword().matches("SecurePass123!"));
+      // Given
+      User user = new User("john_doe", "SecurePass123!", "john@example.com");
+      String newPassword = "NewSecurePass456!";
+  
+      // When
+      User updatedUser = user.withNewPassword(newPassword);
+  
+      // Then
+      assertTrue(updatedUser.isPasswordValid(newPassword));
+      assertFalse(updatedUser.isPasswordValid("SecurePass123!"));
+      
+      assertFalse(user.isPasswordValid(newPassword));
+      assertTrue(user.isPasswordValid("SecurePass123!"));
+      
+      assertNotSame(user, updatedUser);
+      
+      assertEquals(user.getId(), updatedUser.getId());
+      assertEquals(user.getUsername(), updatedUser.getUsername());
+      assertEquals(user.getEmail(), updatedUser.getEmail());
   }
 
   @Test

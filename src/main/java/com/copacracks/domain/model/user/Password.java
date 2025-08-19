@@ -23,44 +23,47 @@ public record Password(String value) {
    * @throws UserValidationException se a senha for inválida
    */
   private static void validatePlainPassword(final String plainPassword) {
+    ensureNotBlank(plainPassword);
+    ensureMinimumLength(plainPassword);
+    ensureContainsUppercase(plainPassword);
+    ensureContainsLowercase(plainPassword);
+    ensureContainsDigit(plainPassword);
+    ensureContainsSpecialChar(plainPassword);
+  }
+
+  private static void ensureNotBlank(final String plainPassword) {
     if (plainPassword == null || plainPassword.isEmpty()) {
       throw new UserValidationException("Senha não pode ser vazia");
     }
+  }
 
+  private static void ensureMinimumLength(final String plainPassword) {
     if (plainPassword.length() < MIN_LENGTH) {
       throw new UserValidationException("Senha deve ter pelo menos " + MIN_LENGTH + " caracteres");
     }
+  }
 
+  private static void ensureContainsUppercase(final String plainPassword) {
     if (!UPPERCASE.matcher(plainPassword).find()) {
       throw new UserValidationException("Senha deve conter pelo menos uma letra maiúscula");
     }
+  }
 
+  private static void ensureContainsLowercase(final String plainPassword) {
     if (!LOWERCASE.matcher(plainPassword).find()) {
       throw new UserValidationException("Senha deve conter pelo menos uma letra minúscula");
     }
+  }
 
+  private static void ensureContainsDigit(final String plainPassword) {
     if (!DIGIT.matcher(plainPassword).find()) {
       throw new UserValidationException("Senha deve conter pelo menos um número");
     }
-
-    if (!SPECIAL_CHAR.matcher(plainPassword).find()) {
-      throw new UserValidationException("Senha deve conter pelo menos um caractere especial");
-    }
   }
 
-  /**
-   * Método utilitário para validar uma senha em texto plano sem criar a instância. Útil para
-   * pré-validação em formulários, APIs, etc.
-   *
-   * @param plainPassword senha a ser testada
-   * @return true se a senha for válida
-   */
-  public static boolean isValidPlainPassword(final String plainPassword) {
-    try {
-      validatePlainPassword(plainPassword);
-      return true;
-    } catch (UserValidationException e) {
-      return false;
+  private static void ensureContainsSpecialChar(final String plainPassword) {
+    if (!SPECIAL_CHAR.matcher(plainPassword).find()) {
+      throw new UserValidationException("Senha deve conter pelo menos um caractere especial");
     }
   }
 }

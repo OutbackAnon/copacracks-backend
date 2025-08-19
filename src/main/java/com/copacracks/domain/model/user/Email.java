@@ -1,6 +1,8 @@
 package com.copacracks.domain.model.user;
 
 import com.copacracks.domain.exception.UserValidationException;
+
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
@@ -17,7 +19,7 @@ public record Email(String value) {
    */
   public Email(final String value) {
     validateEmail(value);
-    this.value = value.trim().toLowerCase();
+    this.value = value.trim().toLowerCase(Locale.ROOT);
   }
 
   /**
@@ -36,7 +38,11 @@ public record Email(String value) {
    * @throws UserValidationException se o email for inválido
    */
   private void validateEmail(final String email) {
-    if (email == null || email.trim().isEmpty()) {
+    if (email.isEmpty()) {
+      throw new UserValidationException("Email não pode ser vazio");
+    }
+
+    if (email == null || email.isBlank()) {
       throw new UserValidationException("Email não pode ser vazio");
     }
 
