@@ -1,7 +1,6 @@
 package com.copacracks.domain.model.user;
 
 import com.copacracks.domain.exception.UserValidationException;
-
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -120,7 +119,8 @@ public record Password(String hashedValue, String salt) {
     try {
       final MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
       final String saltedPassword = plainPassword + salt;
-      final byte[] hashedBytes = messageDigest.digest(saltedPassword.getBytes(StandardCharsets.UTF_8));
+      final byte[] hashedBytes =
+          messageDigest.digest(saltedPassword.getBytes(StandardCharsets.UTF_8));
       return Base64.getEncoder().encodeToString(hashedBytes);
     } catch (NoSuchAlgorithmException e) {
       throw new UserValidationException("Erro ao criptografar senha", e);

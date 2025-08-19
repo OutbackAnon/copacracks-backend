@@ -12,7 +12,7 @@ plugins {
 
 pmd {
     toolVersion = "7.16.0"
-    ruleSets = listOf("category/java/bestpractices.xml", "category/java/codestyle.xml")
+    ruleSetFiles = files("config/pmd/pmd-ruleset.xml")
     isConsoleOutput = true
     isIgnoreFailures = false
 }

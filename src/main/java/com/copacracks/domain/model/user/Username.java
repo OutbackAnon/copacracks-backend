@@ -1,8 +1,7 @@
 package com.copacracks.domain.model.user;
 
-import java.util.regex.Pattern;
-
 import com.copacracks.domain.exception.UserValidationException;
+import java.util.regex.Pattern;
 
 /**
  * Value Object para representar um nome de usuário usando record. Encapsula a lógica de validação
