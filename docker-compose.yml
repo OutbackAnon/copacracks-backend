@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine # Usa a imagem oficial do PostgreSQL. A versão 'alpine' é mais leve.
+    container_name: meu-postgres-db # Nome do container para facilitar a identificação.
+    restart: always # Garante que o container reinicie automaticamente em caso de falha.
+    
+    environment:
+      POSTGRES_USER: admin # Variável de ambiente para o usuário do PostgreSQL.
+      POSTGRES_PASSWORD: admin # Variável de ambiente para a senha. Use uma senha forte em produção!
+      POSTGRES_DB: copacracks # Variável de ambiente para criar um banco de dados inicial.
+    
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Mapeia um volume para persistir os dados do banco.
+      - ./init-scripts:/docker-entrypoint-initdb.d # Opcional: Mapeia um diretório para rodar scripts iniciais.
+      
+    ports:
+      - "5432:5432" # Mapeia a porta 5432 do host para a porta 5432 do container, permitindo a conexão externa.
+
+volumes:
+  postgres_data: # Declara o volume para persistência de dados.
