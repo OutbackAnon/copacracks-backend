@@ -5,6 +5,7 @@ plugins {
     id("java")
     alias(libs.plugins.spotless)
     alias(libs.plugins.spotbugs)
+    alias(libs.plugins.flyway)
     checkstyle
     jacoco
     pmd
@@ -49,11 +50,22 @@ dependencies {
     implementation(libs.javalin.bundle)
     implementation(libs.google.java.format)
     implementation(libs.checkstyle)
+    implementation(libs.guice)
+    implementation(libs.hikari)
+    implementation(libs.postgre)
+    implementation(libs.bundles.flyway)
+
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
+    testCompileOnly(libs.lombok)
+    testAnnotationProcessor(libs.lombok)
 
     spotbugsPlugins(libs.findsecbugs.plugin)
 
     testImplementation(platform(libs.junit.bom))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation(libs.bundles.testcontainers)
+    testImplementation(libs.assertj)
 }
 
 configurations.all {

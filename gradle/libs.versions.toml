@@ -6,6 +6,14 @@ google-java-format = "1.28.0"
 checkstyle = "11.0.0"
 findsecbugs-plugin = "1.12.0"
 junit = "5.9.1"
+guice = "7.0.0"
+lombok = "1.18.38"
+hikari = "7.0.2"
+flyway = "11.11.1"
+postgre = "42.7.7"
+testcontainers-junit = "1.21.3"
+testcontainers-postgre = "1.21.3"
+assertj = "4.0.0-M1"
 
 [libraries]
 javalin-bundle = { module = "io.javalin:javalin-bundle", version.ref = "javalin" }
@@ -13,7 +21,23 @@ google-java-format = { module = "com.google.googlejavaformat:google-java-format"
 checkstyle = { module = "com.puppycrawl.tools:checkstyle", version.ref = "checkstyle" }
 findsecbugs-plugin = { module = "com.h3xstream.findsecbugs:findsecbugs-plugin", version.ref = "findsecbugs-plugin" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+guice = { module = "com.google.inject:guice", version.ref = "guice" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+hikari = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
+postgre = { module = "org.postgresql:postgresql", version.ref = "postgre" }
+flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
+flyway-postgre = { module = "org.flywaydb:flyway-database-postgresql", version.ref = "flyway" }
+testcontainers-junit = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers-junit" }
+testcontainers-postgre = { module = "org.testcontainers:postgresql", version.ref = "testcontainers-postgre" }
+assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+
+[bundles]
+testcontainers = ["testcontainers-junit", "testcontainers-postgre"]
+flyway = ["flyway-core", "flyway-postgre"]
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugs" }
+flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
+
+
