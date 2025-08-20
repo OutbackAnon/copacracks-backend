@@ -3,176 +3,142 @@ package com.copacracks.domain.model.user;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.copacracks.domain.exception.UserValidationException;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 
 class UserTest {
+  private static final String USERNAME = "john_doe";
+  private static final String PASSWORD = "SecurePass123!";
+  private static final String EMAIL = "john@example.com";
+
+  public UserTest() {}
+
+  private boolean creationThrowsFor(
+      final String username, final String password, final String email) {
+    boolean thrown;
+    try {
+      new User(username, password, email);
+      thrown = false;
+    } catch (UserValidationException ex) {
+      thrown = true;
+    }
+    return thrown;
+  }
+
   @Test
   void shouldCreateValidUser() {
     // Given
-    String username = "john_doe";
-    String password = "SecurePass123!";
-    String email = "john@example.com";
+    final String username = USERNAME;
+    final String password = PASSWORD;
+    final String email = EMAIL;
 
     // When
-    User user = new User(username, password, email);
+    final User user = new User(username, password, email);
 
     // Then
-    assertNotNull(user);
-    assertEquals(username, user.getUsername());
-    assertEquals(email, user.getEmail());
-    assertTrue(user.isNew());
+    assertTrue(
+        user != null
+            && username.equals(user.getUsername())
+            && email.equals(user.getEmail())
+            && user.isNew(),
+        "Deve criar usuário válido com propriedades corretas e estado 'novo'.");
   }
 
   @Test
   void shouldValidatePassword() {
     // Given & When & Then
-    assertThrows(
-        UserValidationException.class,
-        () -> {
-          new User("john_doe", "weak", "john@example.com");
-        });
+    final boolean allInvalidThrow =
+        Stream.of("weak", "nouppercase123!", "NOLOWERCASE123!", "NoNumbers!", "NoSpecial123")
+            .allMatch(pwd -> creationThrowsFor(USERNAME, pwd, EMAIL));
 
-    assertThrows(
-        UserValidationException.class,
-        () -> {
-          new User("john_doe", "nouppercase123!", "john@example.com");
-        });
-
-    assertThrows(
-        UserValidationException.class,
-        () -> {
-          new User("john_doe", "NOLOWERCASE123!", "john@example.com");
-        });
-
-    assertThrows(
-        UserValidationException.class,
-        () -> {
-          new User("john_doe", "NoNumbers!", "john@example.com");
-        });
-
-    assertThrows(
-        UserValidationException.class,
-        () -> {
-          new User("john_doe", "NoSpecial123", "john@example.com");
-        });
+    assertTrue(allInvalidThrow, "Todas as senhas inválidas devem lançar UserValidationException.");
   }
 
   @Test
   void shouldValidateEmail() {
     // Given & When & Then
-    assertThrows(
-        UserValidationException.class,
-        () -> {
-          new User("john_doe", "SecurePass123!", "invalid-email");
-        });
+    final boolean allInvalidThrow =
+        Stream.of("invalid-email", "", (String) null)
+            .allMatch(mail -> creationThrowsFor(USERNAME, PASSWORD, mail));
 
-    assertThrows(
-        UserValidationException.class,
-        () -> {
-          new User("john_doe", "SecurePass123!", "");
-        });
-
-    assertThrows(
-        UserValidationException.class,
-        () -> {
-          new User("john_doe", "SecurePass123!", null);
-        });
+    assertTrue(allInvalidThrow, "E-mails inválidos devem lançar UserValidationException.");
   }
 
   @Test
   void shouldValidateUsername() {
     // Given & When & Then
-    assertThrows(
-        UserValidationException.class,
-        () -> {
-          new User("", "SecurePass123!", "john@example.com");
-        });
+    final boolean allInvalidThrow =
+        Stream.of("", "ab", "a".repeat(51), "john-doe")
+            .allMatch(name -> creationThrowsFor(name, PASSWORD, EMAIL));
 
-    assertThrows(
-        UserValidationException.class,
-        () -> {
-          new User("ab", "SecurePass123!", "john@example.com");
-        });
-
-    assertThrows(
-        UserValidationException.class,
-        () -> {
-          new User("a".repeat(51), "SecurePass123!", "john@example.com");
-        });
-
-    assertThrows(
-        UserValidationException.class,
-        () -> {
-          new User("john-doe", "SecurePass123!", "john@example.com");
-        });
+    assertTrue(allInvalidThrow, "Usernames inválidos devem lançar UserValidationException.");
   }
 
   @Test
   void shouldChangePassword() {
     // Given
-    User user = new User("john_doe", "SecurePass123!", "john@example.com");
-    String newPassword = "NewSecurePass456!";
+    final User user = new User(USERNAME, PASSWORD, EMAIL);
+    final String newPassword = "NewSecurePass456!";
 
     // When
-    User updatedUser = user.withNewPassword(newPassword);
+    final User updatedUser = user.withNewPassword(newPassword);
 
     // Then
-    assertTrue(updatedUser.isPasswordValid(newPassword));
-    assertFalse(updatedUser.isPasswordValid("SecurePass123!"));
-
-    assertFalse(user.isPasswordValid(newPassword));
-    assertTrue(user.isPasswordValid("SecurePass123!"));
-
-    assertNotSame(user, updatedUser);
-
-    assertEquals(user.getId(), updatedUser.getId());
-    assertEquals(user.getUsername(), updatedUser.getUsername());
-    assertEquals(user.getEmail(), updatedUser.getEmail());
+    assertTrue(
+        updatedUser.isPasswordValid(newPassword)
+            && !updatedUser.isPasswordValid(PASSWORD)
+            && !user.isPasswordValid(newPassword)
+            && user.isPasswordValid(PASSWORD)
+            && !user.equals(updatedUser)
+            && user.getUsername().equals(updatedUser.getUsername())
+            && user.getEmail().equals(updatedUser.getEmail()),
+        "Alterar a senha deve produzir um novo usuário com mesma identidade e credenciais coerentes.");
   }
 
   @Test
   void shouldChangeEmail() {
     // Given
-    User user = new User("john_doe", "SecurePass123!", "john@example.com");
-    String newEmail = "john.doe@company.com";
+    final User user = new User(USERNAME, PASSWORD, EMAIL);
+    final String newEmail = "john.doe@company.com";
 
     // When
-    User updatedUser = user.withNewEmail(newEmail);
+    final User updatedUser = user.withNewEmail(newEmail);
 
     // Then
-    assertEquals(newEmail, updatedUser.getEmail());
-    // O usuário original não deve ser alterado
-    assertEquals("john@example.com", user.getEmail());
+    assertTrue(
+        newEmail.equals(updatedUser.getEmail()) && EMAIL.equals(user.getEmail()),
+        "Alterar e-mail deve retornar novo usuário e manter e-mail original intacto.");
   }
 
   @Test
   void shouldChangeUsername() {
     // Given
-    User user = new User("john_doe", "SecurePass123!", "john@example.com");
-    String newUsername = "jane_doe";
+    final User user = new User(USERNAME, PASSWORD, EMAIL);
+    final String newUsername = "jane_doe";
 
     // When
-    User updatedUser = user.withNewUsername(newUsername);
+    final User updatedUser = user.withNewUsername(newUsername);
 
     // Then
-    assertEquals(newUsername, updatedUser.getUsername());
-    // O usuário original não deve ser alterado
-    assertEquals("john_doe", user.getUsername());
+    assertTrue(
+        newUsername.equals(updatedUser.getUsername()) && USERNAME.equals(user.getUsername()),
+        "Alterar username deve retornar novo usuário e manter username original intacto.");
   }
 
   @Test
   void shouldCreateUserWithId() {
     // Given
-    Long id = 1L;
-    String username = "john_doe";
-    String password = "SecurePass123!";
-    String email = "john@example.com";
+    final Long id = 1L;
+    final String username = USERNAME;
+    final String password = PASSWORD;
+    final String email = EMAIL;
 
     // When
-    User user = new User(id, username, password, email);
+    final User user = new User(id, username, password, email);
 
     // Then
-    assertEquals(id, user.getId());
-    assertFalse(user.isNew());
+    assertTrue(
+        id.equals(user.getId()) && !user.isNew(),
+        "Usuário criado com ID não deve ser 'novo' e deve manter o mesmo ID.");
   }
 }

@@ -4,7 +4,6 @@ import com.copacracks.domain.exception.UserValidationException;
 import java.util.regex.Pattern;
 
 public record Password(String value) {
-
   private static final int MIN_LENGTH = 8;
   private static final Pattern UPPERCASE = Pattern.compile("[A-Z]");
   private static final Pattern LOWERCASE = Pattern.compile("[a-z]");
