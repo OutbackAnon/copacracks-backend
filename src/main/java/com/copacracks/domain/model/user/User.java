@@ -57,19 +57,19 @@ public class User {
   }
 
   /**
- * Checks if the provided password matches the stored password.
- * This method handles cases where the provided password might be null.
- *
- * @param plainPassword the plain text password to be validated.
- * @return {@code true} if the provided password is valid and matches the stored password;
- * {@code false} otherwise, including if the provided or stored password is null.
- */
+   * Checks if the provided password matches the stored password. This method handles cases where
+   * the provided password might be null.
+   *
+   * @param plainPassword the plain text password to be validated.
+   * @return {@code true} if the provided password is valid and matches the stored password; {@code
+   *     false} otherwise, including if the provided or stored password is null.
+   */
   public boolean isPasswordValid(final String plainPassword) {
     boolean result = false;
 
     if (plainPassword != null && this.password != null) {
       result = this.password.value().matches(plainPassword);
-  }
+    }
 
     return result;
   }
@@ -104,7 +104,6 @@ public class User {
     return new User(this.id, new Username(newUsername), this.password, this.email);
   }
 
-
   /**
    * Verifica se o usuário é novo (ainda não possui ID).
    *
@@ -128,38 +127,39 @@ public class User {
 
   @Override
   public boolean equals(final Object obj) {
-      boolean result = false;
-      
-      if (this == obj) {
-          result = true;
-      } else if (obj != null && getClass() == obj.getClass()) {
-          final User user = (User) obj;
-          
-          // Se ambos têm ID, compara apenas por ID
-          if (id != null && user.id != null) {
-              result = Objects.equals(id, user.id);
-          } else {
-              // Se não têm ID, todos os campos devem ser iguais (AND, não OR)
-              result = Objects.equals(username, user.username) && 
-                      Objects.equals(password, user.password) &&
-                      Objects.equals(email, user.email);
-          }
+    boolean result = false;
+
+    if (this == obj) {
+      result = true;
+    } else if (obj != null && getClass() == obj.getClass()) {
+      final User user = (User) obj;
+
+      // Se ambos têm ID, compara apenas por ID
+      if (id != null && user.id != null) {
+        result = Objects.equals(id, user.id);
+      } else {
+        // Se não têm ID, todos os campos devem ser iguais (AND, não OR)
+        result =
+            Objects.equals(username, user.username)
+                && Objects.equals(password, user.password)
+                && Objects.equals(email, user.email);
       }
-      
-      return result;
+    }
+
+    return result;
   }
 
   @Override
   public int hashCode() {
-      final int result;
-      
-      if (id != null) {
-          result = Objects.hash(id);
-      } else {
-          result = Objects.hash(username, password, email);
-      }
-      
-      return result;
+    final int result;
+
+    if (id != null) {
+      result = Objects.hash(id);
+    } else {
+      result = Objects.hash(username, password, email);
+    }
+
+    return result;
   }
 
   @Override

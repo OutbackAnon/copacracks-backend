@@ -1,7 +1,6 @@
 package com.copacracks.domain.model.user;
 
 import com.copacracks.domain.exception.UserValidationException;
-
 import java.util.Locale;
 import java.util.regex.Pattern;
 
