@@ -8,6 +8,10 @@ on:
   push:
     branches: [ main, develop ]
 
+  permissions:
+    pull-requests: write
+    issues: write
+
 env:
   GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true
 
