@@ -1,6 +1,7 @@
 package com.copacracks.domain.model.user;
 
 import com.copacracks.domain.exception.UserValidationException;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -12,6 +13,8 @@ public class User {
   private final Username username;
   private final Password password;
   private final Email email;
+  private final String hashedPassword;
+  private final LocalDateTime createdAt;
 
   /**
    * Construtor para criação de novo usuário.
@@ -19,10 +22,11 @@ public class User {
    * @param username nome de usuário
    * @param password senha
    * @param email email
+   * @param email createdAt
    * @throws UserValidationException se os parâmetros forem inválidos
    */
   public User(final String username, final String password, final String email) {
-    this(null, username, password, email);
+    this(null, username, password, email, null, null, LocalDateTime.now());
   }
 
   /**
@@ -32,13 +36,48 @@ public class User {
    * @param username nome de usuário
    * @param password senha
    * @param email email
+   * @param email createdAt
    * @throws UserValidationException se os parâmetros forem inválidos
    */
-  public User(final Long id, final String username, final String password, final String email) {
+  public User(
+      final Long id,
+      final String username,
+      final String password,
+      final String email,
+      final String hashedPassword,
+      final String salt,
+      final LocalDateTime createdAt) {
     this.id = id;
     this.username = new Username(username);
     this.password = new Password(password);
     this.email = new Email(email);
+    this.hashedPassword = hashedPassword;
+    this.createdAt = createdAt;
+  }
+
+  /**
+   * Construtor para usuário existente.
+   *
+   * @param id identificador único
+   * @param username nome de usuário
+   * @param hashedPassword senha
+   * @param email email
+   * @param createdAt createdAt
+   * @throws UserValidationException se os parâmetros forem inválidos
+   */
+  public User(
+      final Long id,
+      final String username,
+      final String hashedPassword,
+      final String email,
+      final String salt,
+      final LocalDateTime createdAt) {
+    this.id = id;
+    this.username = new Username(username);
+    this.password = null;
+    this.email = new Email(email);
+    this.hashedPassword = hashedPassword;
+    this.createdAt = createdAt;
   }
 
   /**
@@ -49,11 +88,19 @@ public class User {
    * @param password senha já criptografada
    * @param email email já validado
    */
-  public User(final Long id, final Username username, final Password password, final Email email) {
+  public User(
+      final Long id,
+      final Username username,
+      final Password password,
+      final Email email,
+      final String hashedPassword,
+      final LocalDateTime createdAt) {
     this.id = id;
     this.username = username;
     this.password = password;
     this.email = email;
+    this.hashedPassword = hashedPassword;
+    this.createdAt = createdAt;
   }
 
   /**
@@ -81,7 +128,13 @@ public class User {
    * @throws UserValidationException se a nova senha for inválida
    */
   public User withNewPassword(final String newPassword) {
-    return new User(this.id, this.username, new Password(newPassword), this.email);
+    return new User(
+        this.id,
+        this.username,
+        new Password(newPassword),
+        this.email,
+        this.hashedPassword,
+        this.createdAt);
   }
 
   /**
@@ -91,7 +144,13 @@ public class User {
    * @throws UserValidationException se o novo email for inválido
    */
   public User withNewEmail(final String newEmail) {
-    return new User(this.id, this.username, this.password, new Email(newEmail));
+    return new User(
+        this.id,
+        this.username,
+        this.password,
+        new Email(newEmail),
+        this.hashedPassword,
+        this.createdAt);
   }
 
   /**
@@ -101,7 +160,23 @@ public class User {
    * @throws UserValidationException se o novo nome de usuário for inválido
    */
   public User withNewUsername(final String newUsername) {
-    return new User(this.id, new Username(newUsername), this.password, this.email);
+    return new User(
+        this.id,
+        new Username(newUsername),
+        this.password,
+        this.email,
+        this.hashedPassword,
+        this.createdAt);
+  }
+
+  public User withHashedPassword(final String hashedPassword) {
+    return new User(
+        this.id,
+        this.username,
+        this.password,
+        this.email,
+        hashedPassword,
+        this.createdAt);
   }
 
   /**
@@ -123,6 +198,14 @@ public class User {
 
   public String getEmail() {
     return email.value();
+  }
+
+  public LocalDateTime getCreateAt() {
+    return createdAt;
+  }
+
+  public String getHashedPassword() {
+    return hashedPassword;
   }
 
   @Override

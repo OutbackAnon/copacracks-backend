@@ -3,6 +3,7 @@ package com.copacracks.domain.model.user;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.copacracks.domain.exception.UserValidationException;
+import java.time.LocalDateTime;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 
@@ -134,7 +135,7 @@ class UserTest {
     final String email = EMAIL;
 
     // When
-    final User user = new User(id, username, password, email);
+    final User user = new User(id, username, password, email, null, LocalDateTime.now());
 
     // Then
     assertTrue(
