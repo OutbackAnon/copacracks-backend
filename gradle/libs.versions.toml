@@ -14,6 +14,7 @@ postgre = "42.7.7"
 testcontainers-junit = "1.21.3"
 testcontainers-postgre = "1.21.3"
 assertj = "4.0.0-M1"
+bouncycastle = "1.81"
 
 [libraries]
 javalin-bundle = { module = "io.javalin:javalin-bundle", version.ref = "javalin" }
@@ -30,6 +31,7 @@ flyway-postgre = { module = "org.flywaydb:flyway-database-postgresql", version.r
 testcontainers-junit = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers-junit" }
 testcontainers-postgre = { module = "org.testcontainers:postgresql", version.ref = "testcontainers-postgre" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+bouncycastle = { module = "org.bouncycastle:bcpkix-jdk18on", version.ref = "bouncycastle" }
 
 [bundles]
 testcontainers = ["testcontainers-junit", "testcontainers-postgre"]

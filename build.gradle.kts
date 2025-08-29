@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.hikari)
     implementation(libs.postgre)
     implementation(libs.bundles.flyway)
+    implementation(libs.bouncycastle)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
