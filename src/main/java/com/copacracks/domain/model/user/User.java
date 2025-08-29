@@ -26,7 +26,7 @@ public class User {
    * @throws UserValidationException se os parâmetros forem inválidos
    */
   public User(final String username, final String password, final String email) {
-    this(null, username, password, email, null, null, LocalDateTime.now());
+    this(null, username, password, email, null, LocalDateTime.now());
   }
 
   /**
@@ -36,7 +36,7 @@ public class User {
    * @param username nome de usuário
    * @param password senha
    * @param email email
-   * @param email createdAt
+   * @param createdAt createdAt
    * @throws UserValidationException se os parâmetros forem inválidos
    */
   public User(
@@ -45,7 +45,6 @@ public class User {
       final String password,
       final String email,
       final String hashedPassword,
-      final String salt,
       final LocalDateTime createdAt) {
     this.id = id;
     this.username = new Username(username);
@@ -70,7 +69,6 @@ public class User {
       final String username,
       final String hashedPassword,
       final String email,
-      final String salt,
       final LocalDateTime createdAt) {
     this.id = id;
     this.username = new Username(username);
