@@ -8,6 +8,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +22,12 @@ import lombok.extern.slf4j.Slf4j;
 public class JdbcUserRepository implements UserRepository {
   private final DataSource dataSource;
 
+  // private static final String INSERT_USER =
+  //     "INSERT INTO users (username, password_hash, email, created_at) VALUES (?, ?, ?, NOW())
+  // RETURNING id";
+
   private static final String INSERT_USER =
-      "INSERT INTO users (username, password_hash, email, created_at) VALUES (?, ?, ?, NOW()) RETURNING id";
+      "INSERT INTO users (username, password_hash, email, salt, created_at) VALUES (?, ?, ?, ?) RETURNING id";
 
   private static final String FIND_BY_ID =
       "SELECT id, username, password_hash, email FROM users WHERE id = ?";
@@ -129,14 +136,21 @@ public class JdbcUserRepository implements UserRepository {
         PreparedStatement stmt = conn.prepareStatement(INSERT_USER)) {
 
       stmt.setString(1, user.getUsername());
-      stmt.setString(2, hashPassword(user)); // Você precisa implementar hash da senha
+      stmt.setString(2, user.getHashedPassword());
       stmt.setString(3, user.getEmail());
+      stmt.setTimestamp(4, Timestamp.from(user.getCreateAt().toInstant(ZoneOffset.UTC)));
 
       ResultSet rs = stmt.executeQuery();
       if (rs.next()) {
         Long id = rs.getLong("id");
         // Retorna um novo User com o ID gerado
-        return new User(id, user.getUsername(), "hashedPassword", user.getEmail());
+        return new User(
+            id,
+            user.getUsername(),
+            user.getHashedPassword(),
+            user.getEmail(),
+            user.getHashedPassword(),
+            user.getCreateAt());
       }
 
       throw new RuntimeException("Failed to insert user");
@@ -151,12 +165,9 @@ public class JdbcUserRepository implements UserRepository {
     return new User(
         rs.getLong("id"),
         rs.getString("username"),
+        rs.getString("password_raw"),
+        rs.getString("email"),
         rs.getString("password_hash"),
-        rs.getString("email"));
-  }
-
-  private String hashPassword(User user) {
-    // TODO: Implementar hash real da senha (BCrypt, etc.)
-    return "hashed_" + user.getUsername();
+        rs.getObject("created_at", LocalDateTime.class));
   }
 }

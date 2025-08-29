@@ -38,8 +38,13 @@ public class DatabaseProvider implements Provider<DataSource> {
   private void runMigration(DataSource dataSource) {
     try {
       Flyway flyway =
-          Flyway.configure().dataSource(dataSource).locations("classpath:db/migration").load();
+          Flyway.configure()
+              .dataSource(dataSource)
+              .locations("classpath:db/migration")
+              .cleanDisabled(false)
+              .load();
 
+      flyway.clean();
       flyway.migrate();
       log.info("Database migrations executed successfully");
     } catch (Exception e) {

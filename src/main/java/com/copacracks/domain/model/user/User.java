@@ -171,12 +171,7 @@ public class User {
 
   public User withHashedPassword(final String hashedPassword) {
     return new User(
-        this.id,
-        this.username,
-        this.password,
-        this.email,
-        hashedPassword,
-        this.createdAt);
+        this.id, this.username, this.password, this.email, hashedPassword, this.createdAt);
   }
 
   /**

@@ -1,7 +1,7 @@
 package com.copacracks;
 
-import com.copacracks.web.config.ApplicationModule;
-import com.copacracks.web.controller.UserController;
+import com.copacracks.infrastructure.config.ApplicationModule;
+import com.copacracks.infrastructure.controller.UserController;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.javalin.Javalin;
@@ -32,7 +32,7 @@ public class Main {
 
     // Rotas
     app.post("/api/users", userController::registerUser);
-    app.get("/api/users/{id}", userController::getUserById);
+    // app.get("/api/users/{id}", userController::getUserById);
 
     // Health check
     app.get("/health", ctx -> ctx.json("OK"));
