@@ -9,6 +9,9 @@ import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
 import org.bouncycastle.crypto.params.Argon2Parameters;
 
 public class PasswordHasherImpl implements PasswordHasher {
+  static final String HASH_DELIMITER = "::";
+  static final String HEX_FORMAT = "%040x";
+
   @Override
   public String createHash(String rawPassword) {
     byte[] salt = generatedSalt();
@@ -50,7 +53,7 @@ public class PasswordHasherImpl implements PasswordHasher {
 
     generator.generateBytes(rawPassword.getBytes(StandardCharsets.UTF_8), result, 0, result.length);
 
-    StringJoiner sj = new StringJoiner("::");
+    StringJoiner sj = new StringJoiner(HASH_DELIMITER);
     sj.add(salt);
     sj.add(toStringHex(result));
 
@@ -58,6 +61,6 @@ public class PasswordHasherImpl implements PasswordHasher {
   }
 
   private String toStringHex(byte[] bytes) {
-    return String.format("%040x", new BigInteger(1, bytes));
+    return String.format(HEX_FORMAT, new BigInteger(1, bytes));
   }
 }
