@@ -2,32 +2,22 @@ package com.copacracks.infrastructure.repository;
 
 import com.copacracks.domain.model.user.User;
 import com.copacracks.domain.repository.UserRepository;
+import com.copacracks.infrastructure.mapper.UserMapper;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Optional;
 import javax.sql.DataSource;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Singleton
-@RequiredArgsConstructor(onConstructor_ = @Inject)
-public class JdbcUserRepository implements UserRepository {
-  private final DataSource dataSource;
-
-  // private static final String INSERT_USER =
-  //     "INSERT INTO users (username, password_hash, email, created_at) VALUES (?, ?, ?, NOW())
-  // RETURNING id";
+public class JdbcUserRepository extends AbstractJdbcRepository implements UserRepository {
 
   private static final String INSERT_USER =
-      "INSERT INTO users (username, password_hash, email, salt, created_at) VALUES (?, ?, ?, ?) RETURNING id";
+      "INSERT INTO users (username, password_hash, email, created_at) VALUES (?, ?, ?, ?) RETURNING id";
 
   private static final String FIND_BY_ID =
       "SELECT id, username, password_hash, email FROM users WHERE id = ?";
@@ -35,12 +25,12 @@ public class JdbcUserRepository implements UserRepository {
   private static final String FIND_BY_USERNAME =
       "SELECT id, username, password_hash, email FROM users WHERE username = ?";
 
-  private static final String FIND_BY_EMAIL =
-      "SELECT id, username, password_hash, email FROM users WHERE email = ?";
-
   private static final String EXISTS_BY_USERNAME = "SELECT 1 FROM users WHERE username = ? LIMIT 1";
 
-  private static final String EXISTS_BY_EMAIL = "SELECT 1 FROM users WHERE email = ? LIMIT 1";
+  @Inject
+  public JdbcUserRepository(DataSource dataSource) {
+    super(dataSource);
+  }
 
   @Override
   public User save(User user) {
@@ -53,112 +43,39 @@ public class JdbcUserRepository implements UserRepository {
 
   @Override
   public Optional<User> findById(Long id) {
-    try (Connection conn = dataSource.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(FIND_BY_ID)) {
-
-      stmt.setLong(1, id);
-      ResultSet rs = stmt.executeQuery();
-
-      return rs.next() ? Optional.of(mapResultSetToUser(rs)) : Optional.empty();
-
-    } catch (SQLException e) {
-      log.error("Error finding user by id: {}", id, e);
-      throw new RuntimeException("Database error", e);
-    }
+    return executeSingleResultQuery(
+        FIND_BY_ID, stmt -> stmt.setLong(1, id), this::mapResultSetToUser);
   }
 
   @Override
   public Optional<User> findByUsername(String username) {
-    try (Connection conn = dataSource.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(FIND_BY_USERNAME)) {
-
-      stmt.setString(1, username);
-      ResultSet rs = stmt.executeQuery();
-
-      return rs.next() ? Optional.of(mapResultSetToUser(rs)) : Optional.empty();
-
-    } catch (SQLException e) {
-      log.error("Error finding user by username: {}", username, e);
-      throw new RuntimeException("Database error", e);
-    }
-  }
-
-  @Override
-  public Optional<User> findByEmail(String email) {
-    try (Connection conn = dataSource.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(FIND_BY_EMAIL)) {
-
-      stmt.setString(1, email);
-      ResultSet rs = stmt.executeQuery();
-
-      return rs.next() ? Optional.of(mapResultSetToUser(rs)) : Optional.empty();
-
-    } catch (SQLException e) {
-      log.error("Error finding user by email: {}", email, e);
-      throw new RuntimeException("Database error", e);
-    }
+    return executeSingleResultQuery(
+        FIND_BY_USERNAME, stmt -> stmt.setString(1, username), this::mapResultSetToUser);
   }
 
   @Override
   public boolean existsByUsername(String username) {
-    try (Connection conn = dataSource.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(EXISTS_BY_USERNAME)) {
-
-      stmt.setString(1, username);
-      ResultSet rs = stmt.executeQuery();
-
-      return rs.next();
-
-    } catch (SQLException e) {
-      log.error("Error checking if username exists: {}", username, e);
-      throw new RuntimeException("Database error", e);
-    }
-  }
-
-  @Override
-  public boolean existsByEmail(String email) {
-    try (Connection conn = dataSource.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(EXISTS_BY_EMAIL)) {
-
-      stmt.setString(1, email);
-      ResultSet rs = stmt.executeQuery();
-
-      return rs.next();
-
-    } catch (SQLException e) {
-      log.error("Error checking if email exists: {}", email, e);
-      throw new RuntimeException("Database error", e);
-    }
+    return executeBooleanQuery(EXISTS_BY_USERNAME, stmt -> stmt.setString(1, username));
   }
 
   private User insertUser(User user) {
-    try (Connection conn = dataSource.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(INSERT_USER)) {
+    var mappedUser = UserMapper.fromModel(user);
+    Long generateId =
+        executeInsertAndReturnId(
+            INSERT_USER,
+            stmt -> {
+              stmt.setString(1, mappedUser.getUsername());
+              stmt.setString(2, mappedUser.getPassword());
+              stmt.setString(3, mappedUser.getEmail());
+              stmt.setTimestamp(4, mappedUser.getCreatedAt());
+            });
 
-      stmt.setString(1, user.getUsername());
-      stmt.setString(2, user.getHashedPassword());
-      stmt.setString(3, user.getEmail());
-      stmt.setTimestamp(4, Timestamp.from(user.getCreateAt().toInstant(ZoneOffset.UTC)));
-
-      ResultSet rs = stmt.executeQuery();
-      if (rs.next()) {
-        Long id = rs.getLong("id");
-        // Retorna um novo User com o ID gerado
-        return new User(
-            id,
-            user.getUsername(),
-            user.getHashedPassword(),
-            user.getEmail(),
-            user.getHashedPassword(),
-            user.getCreateAt());
-      }
-
-      throw new RuntimeException("Failed to insert user");
-
-    } catch (SQLException e) {
-      log.error("Error inserting user: {}", user.getUsername(), e);
-      throw new RuntimeException("Database error", e);
-    }
+    return new User(
+        generateId,
+        user.getUsername(),
+        user.getHashedPassword(),
+        user.getEmail(),
+        user.getCreateAt());
   }
 
   private User mapResultSetToUser(ResultSet rs) throws SQLException {
