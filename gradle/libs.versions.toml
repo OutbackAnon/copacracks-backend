@@ -15,6 +15,9 @@ testcontainers-junit = "1.21.3"
 testcontainers-postgre = "1.21.3"
 assertj = "4.0.0-M1"
 bouncycastle = "1.81"
+mockito = "5.19.0"
+rewrite = "7.14.1"
+rewrite-staticanalysis = "2.16.0"
 
 [libraries]
 javalin-bundle = { module = "io.javalin:javalin-bundle", version.ref = "javalin" }
@@ -32,6 +35,8 @@ testcontainers-junit = { module = "org.testcontainers:junit-jupiter", version.re
 testcontainers-postgre = { module = "org.testcontainers:postgresql", version.ref = "testcontainers-postgre" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 bouncycastle = { module = "org.bouncycastle:bcpkix-jdk18on", version.ref = "bouncycastle" }
+mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+rewrite-recipe-staticanalysis = { module = "org.openrewrite.recipe:rewrite-static-analysise", version.ref = "rewrite-staticanalysis" }
 
 [bundles]
 testcontainers = ["testcontainers-junit", "testcontainers-postgre"]
@@ -41,5 +46,6 @@ flyway = ["flyway-core", "flyway-postgre"]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugs" }
 flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
+rewrite = { id = "org.openrewrite.rewrite", version.ref = "rewrite" }
 
 

@@ -1,3 +1,6 @@
+import com.github.spotbugs.snom.Confidence
+import com.github.spotbugs.snom.Effort
+
 group = "com.copacracks"
 version = "1.0-SNAPSHOT"
 
@@ -6,6 +9,7 @@ plugins {
     alias(libs.plugins.spotless)
     alias(libs.plugins.spotbugs)
     alias(libs.plugins.flyway)
+    alias(libs.plugins.rewrite)
     checkstyle
     jacoco
     pmd
@@ -18,9 +22,13 @@ pmd {
     isIgnoreFailures = false
 }
 
+rewrite {
+    activeRecipe("org.openrewrite.staticanalysis.CodeCleanup")
+}
+
 spotbugs {
-    effort.set(com.github.spotbugs.snom.Effort.MAX)
-    reportLevel.set(com.github.spotbugs.snom.Confidence.HIGH)
+    effort.set(Effort.MAX)
+    reportLevel.set(Confidence.HIGH)
     ignoreFailures.set(false)
     showProgress.set(true)
 }
@@ -62,11 +70,14 @@ dependencies {
     testAnnotationProcessor(libs.lombok)
 
     spotbugsPlugins(libs.findsecbugs.plugin)
+    // rewrite(libs.rewrite.recipe.staticanalysis)
+    rewrite("org.openrewrite.recipe:rewrite-static-analysis:latest.release")
 
     testImplementation(platform(libs.junit.bom))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation(libs.bundles.testcontainers)
     testImplementation(libs.assertj)
+    testImplementation(libs.mockito)
 }
 
 configurations.all {
