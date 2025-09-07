@@ -46,6 +46,23 @@ checkstyle {
 spotless {
     java {
         googleJavaFormat("1.28.0")
+        formatAnnotations()
+        indentWithSpaces(4)
+        // eclipse()            // has its own section below
+        // prettier()           // has its own section below
+        // clangFormat()        // has its own section below
+        // idea()               // has its own section below
+        cleanthat()
+        removeUnusedImports()
+        removeWildcardImports()
+        importOrder()
+        // optional: you can specify import groups directly
+        // note: you can use an empty string for all the imports you didn't specify explicitly, '|' to join group without blank line, and '\\#` prefix for static imports
+        // importOrder("java|java"',"'com.acm"',""',"'\\#com.acm"',"'\\"')
+        // optional: instead of specifying import groups directly you can specify a config file
+        // export config file: https://github.com/diffplug/spotless/blob/main/ECLIPSE_SCREENSHOTS.md#creating-spotlessimportorder
+        // importOrderFile("eclipse-import-order.txt") // import order file as exported from eclipse
+
         target("src/**/*.java")
     }
 }
