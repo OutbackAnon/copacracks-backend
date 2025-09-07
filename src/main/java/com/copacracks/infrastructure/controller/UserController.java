@@ -18,42 +18,42 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 public class UserController {
 
-  private final CreateUserCase createUserCase;
+	private final CreateUserCase createUserCase;
 
-  /**
-   * Registers a new user in the system.
-   *
-   * <p>This method handles HTTP POST requests for user registration. It processes the incoming user
-   * registration data, validates it through the business logic layer, and returns an appropriate
-   * HTTP response.
-   *
-   * <p>The method handles the following scenarios:
-   *
-   * <ul>
-   *   <li>Successful registration: Returns HTTP 201 Created with user details
-   *   <li>Validation errors: Returns HTTP 400 Bad Request with error details
-   *   <li>Internal errors: Returns HTTP 500 Internal Server Error with generic error message
-   * </ul>
-   *
-   * @param ctx the Javalin HTTP context containing the request data and response object
-   */
-  public void registerUser(Context ctx) {
-    try {
-      CreateUserRequestDto request = ctx.bodyAsClass(CreateUserRequestDto.class);
+	/**
+	 * Registers a new user in the system.
+	 *
+	 * <p>This method handles HTTP POST requests for user registration. It processes the incoming user
+	 * registration data, validates it through the business logic layer, and returns an appropriate
+	 * HTTP response.
+	 *
+	 * <p>The method handles the following scenarios:
+	 *
+	 * <ul>
+	 *   <li>Successful registration: Returns HTTP 201 Created with user details
+	 *   <li>Validation errors: Returns HTTP 400 Bad Request with error details
+	 *   <li>Internal errors: Returns HTTP 500 Internal Server Error with generic error message
+	 * </ul>
+	 *
+	 * @param ctx the Javalin HTTP context containing the request data and response object
+	 */
+	public void registerUser(Context ctx) {
+		try {
+			CreateUserRequestDto request = ctx.bodyAsClass(CreateUserRequestDto.class);
 
-      createUserCase.execute(request);
+			createUserCase.execute(request);
 
-      ctx.status(HttpStatus.CREATED);
-      ctx.json(new UserResponse(1L, request.username(), request.email()));
+			ctx.status(HttpStatus.CREATED);
+			ctx.json(new UserResponse(1L, request.username(), request.email()));
 
-    } catch (UserValidationException e) {
-      log.warn("User validation error: {}", e.getMessage());
-      ctx.status(HttpStatus.BAD_REQUEST);
-      ctx.json(new ErrorResponse("VALIDATION_ERROR", e.getMessage()));
-    } catch (Exception e) {
-      log.error("Error registering user", e);
-      ctx.status(HttpStatus.INTERNAL_SERVER_ERROR);
-      ctx.json(new ErrorResponse("INTERNAL_ERROR", "Internal server error"));
-    }
-  }
+		} catch (UserValidationException e) {
+			log.warn("User validation error: {}", e.getMessage());
+			ctx.status(HttpStatus.BAD_REQUEST);
+			ctx.json(new ErrorResponse("VALIDATION_ERROR", e.getMessage()));
+		} catch (Exception e) {
+			log.error("Error registering user", e);
+			ctx.status(HttpStatus.INTERNAL_SERVER_ERROR);
+			ctx.json(new ErrorResponse("INTERNAL_ERROR", "Internal server error"));
+		}
+	}
 }

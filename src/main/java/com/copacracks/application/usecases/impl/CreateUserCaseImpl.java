@@ -8,22 +8,22 @@ import com.copacracks.domain.repository.UserRepository;
 import com.google.inject.Inject;
 
 public class CreateUserCaseImpl implements CreateUserCase {
-  private final UserRepository userRepository;
-  private final PasswordHasher passwordHasher;
+	private final UserRepository userRepository;
+	private final PasswordHasher passwordHasher;
 
-  @Inject
-  public CreateUserCaseImpl(UserRepository userRepository, PasswordHasher passwordHasher) {
-    this.userRepository = userRepository;
-    this.passwordHasher = passwordHasher;
-  }
+	@Inject
+	public CreateUserCaseImpl(UserRepository userRepository, PasswordHasher passwordHasher) {
+		this.userRepository = userRepository;
+		this.passwordHasher = passwordHasher;
+	}
 
-  @Override
-  public void execute(CreateUserRequestDto userDto) {
-    var user = new User(userDto.username(), userDto.password(), userDto.email());
-    var hash = passwordHasher.createHash(userDto.password());
+	@Override
+	public void execute(CreateUserRequestDto userDto) {
+		var user = new User(userDto.username(), userDto.password(), userDto.email());
+		var hash = passwordHasher.createHash(userDto.password());
 
-    var userWithhashedPassword = user.withHashedPassword(hash);
+		var userWithhashedPassword = user.withHashedPassword(hash);
 
-    userRepository.save(userWithhashedPassword);
-  }
+		userRepository.save(userWithhashedPassword);
+	}
 }

@@ -23,7 +23,10 @@ pmd {
 }
 
 rewrite {
-    activeRecipe("org.openrewrite.staticanalysis.CodeCleanup")
+    // activeRecipe("org.openrewrite.staticanalysis.CodeCleanup")
+    // activeRecipe("org.openrewrite.checkstyle.Checkstyle")
+    activeRecipe("org.openrewrite.staticanalysis.CommonStaticAnalysis")
+    checkstyleConfigFile = file("config/checkstyle/checkstyle.xml")
 }
 
 spotbugs {
@@ -48,6 +51,7 @@ spotless {
         googleJavaFormat("1.28.0")
         formatAnnotations()
         indentWithSpaces(4)
+        indentWithTabs(2)
         // eclipse()            // has its own section below
         // prettier()           // has its own section below
         // clangFormat()        // has its own section below

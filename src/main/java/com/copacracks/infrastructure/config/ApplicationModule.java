@@ -12,17 +12,17 @@ import com.google.inject.Singleton;
 import javax.sql.DataSource;
 
 public class ApplicationModule extends AbstractModule {
-  @Override
-  protected void configure() {
-    // Bind interfaces to implementations
-    bind(UserRepository.class).to(JdbcUserRepository.class);
-    bind(CreateUserCase.class).to(CreateUserCaseImpl.class);
-    bind(PasswordHasher.class).to(PasswordHasherImpl.class);
-  }
+	@Override
+	protected void configure() {
+		// Bind interfaces to implementations
+		bind(UserRepository.class).to(JdbcUserRepository.class);
+		bind(CreateUserCase.class).to(CreateUserCaseImpl.class);
+		bind(PasswordHasher.class).to(PasswordHasherImpl.class);
+	}
 
-  @Provides
-  @Singleton
-  public DataSource provideDataSource() {
-    return new DatabaseProvider().get();
-  }
+	@Provides
+	@Singleton
+	public DataSource provideDataSource() {
+		return new DatabaseProvider().get();
+	}
 }

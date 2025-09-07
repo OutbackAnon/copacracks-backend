@@ -5,53 +5,49 @@ import com.copacracks.infrastructure.controller.UserController;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.javalin.Javalin;
+import io.javalin.plugin.bundled.CorsPluginConfig;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SuppressWarnings("PMD.UseUtilityClass")
 public class Main {
-  public static void main(String[] args) {
-    Injector injector = Guice.createInjector(new ApplicationModule());
+	public static void main(String[] args) {
+		Injector injector = Guice.createInjector(new ApplicationModule());
 
-    UserController userController = injector.getInstance(UserController.class);
+		UserController userController = injector.getInstance(UserController.class);
 
-    Javalin app =
-        Javalin.create(
-            config -> {
-              config.bundledPlugins.enableCors(
-                  cors -> {
-                    cors.addRule(it -> it.anyHost());
-                  });
-              config.showJavalinBanner = false;
-            });
+		Javalin app =
+				Javalin.create(
+						config -> {
+							config.bundledPlugins.enableCors(
+									cors -> cors.addRule(CorsPluginConfig.CorsRule::anyHost));
+							config.showJavalinBanner = false;
+						});
 
-    app.before(
-        ctx -> {
-          log.info("{} {}", ctx.method(), ctx.path());
-        });
+		app.before(ctx -> log.info("{} {}", ctx.method(), ctx.path()));
 
-    // Rotas
-    app.post("/api/users", userController::registerUser);
+		// Rotas
+		app.post("/api/users", userController::registerUser);
 
-    // Health check
-    app.get("/health", ctx -> ctx.json("OK"));
+		// Health check
+		app.get("/health", ctx -> ctx.json("OK"));
 
-    // Error handling
-    app.exception(
-        Exception.class,
-        (e, ctx) -> {
-          log.error("Unhandled exception", e);
-          ctx.status(500);
-          ctx.json("Internal server error");
-        });
+		// Error handling
+		app.exception(
+				Exception.class,
+				(e, ctx) -> {
+					log.error("Unhandled exception", e);
+					ctx.status(500);
+					ctx.json("Internal server error");
+				});
 
-    // Iniciar servidor
-    int port = Integer.parseInt(System.getProperty("server.port", "8080"));
-    app.start(port);
+		// Iniciar servidor
+		int port = Integer.parseInt(System.getProperty("server.port", "8080"));
+		app.start(port);
 
-    log.info("Servidor iniciado na porta {}", port);
-    log.info("Teste com: POST http://localhost:{}/api/users", port);
-    log.info(
-        "Body: {{\"username\":\"joao\",\"password\":\"senha123\",\"email\":\"joao@email.com\"}}");
-  }
+		log.info("Servidor iniciado na porta {}", port);
+		log.info("Teste com: POST http://localhost:{}/api/users", port);
+		log.info(
+				"Body: {{\"username\":\"joao\",\"password\":\"senha123\",\"email\":\"joao@email.com\"}}");
+	}
 }
