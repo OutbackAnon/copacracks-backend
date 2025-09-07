@@ -1,6 +1,6 @@
 package com.copacracks.domain.model.user;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.copacracks.domain.exception.UserValidationException;
 import java.time.LocalDateTime;

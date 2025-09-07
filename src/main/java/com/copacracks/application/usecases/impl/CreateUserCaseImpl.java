@@ -8,8 +8,8 @@ import com.copacracks.domain.repository.UserRepository;
 import com.google.inject.Inject;
 
 public class CreateUserCaseImpl implements CreateUserCase {
-  private UserRepository userRepository;
-  private PasswordHasher passwordHasher;
+  private final UserRepository userRepository;
+  private final PasswordHasher passwordHasher;
 
   @Inject
   public CreateUserCaseImpl(UserRepository userRepository, PasswordHasher passwordHasher) {

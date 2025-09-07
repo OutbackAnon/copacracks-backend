@@ -32,7 +32,6 @@ public class Main {
 
     // Rotas
     app.post("/api/users", userController::registerUser);
-    // app.get("/api/users/{id}", userController::getUserById);
 
     // Health check
     app.get("/health", ctx -> ctx.json("OK"));
@@ -54,7 +53,5 @@ public class Main {
     log.info("Teste com: POST http://localhost:{}/api/users", port);
     log.info(
         "Body: {{\"username\":\"joao\",\"password\":\"senha123\",\"email\":\"joao@email.com\"}}");
-
-    // Javalin.create().get("/", ctx -> ctx.result("Hello Copacracks Backend")).start(8080);
   }
 }

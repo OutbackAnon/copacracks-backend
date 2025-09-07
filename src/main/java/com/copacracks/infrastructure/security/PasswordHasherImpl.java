@@ -10,7 +10,7 @@ import org.bouncycastle.crypto.params.Argon2Parameters;
 
 public class PasswordHasherImpl implements PasswordHasher {
   static final String HASH_DELIMITER = "::";
-  static final String HEX_FORMAT = "%040x";
+  static final String HEX_FORMAT = "%02x";
 
   @Override
   public String createHash(String rawPassword) {

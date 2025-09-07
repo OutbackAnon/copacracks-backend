@@ -8,6 +8,29 @@ import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
 
+/**
+ * Database configuration and DataSource provider for the CopaCracks application.
+ *
+ * <p>This class is responsible for configuring and providing database connections through a
+ * HikariCP connection pool. It also handles database schema migrations using Flyway during
+ * application startup.
+ *
+ * <p>Key responsibilities:
+ *
+ * <ul>
+ *   <li>Configure HikariCP connection pool with optimal settings
+ *   <li>Provide DataSource instances for dependency injection
+ *   <li>Execute database migrations automatically on startup
+ *   <li>Handle database configuration errors gracefully
+ * </ul>
+ *
+ * <p>The provider is configured as a singleton to ensure only one DataSource instance is created
+ * and shared across the application.
+ *
+ * @author CopaCracks Team
+ * @version 1.0
+ * @since 1.0
+ */
 @Slf4j
 @Singleton
 public class DatabaseProvider implements Provider<DataSource> {
