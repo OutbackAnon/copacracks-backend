@@ -1,5 +1,6 @@
 package com.copacracks.infrastructure.persistence.repository;
 
+import com.copacracks.infrastructure.exception.DatabaseException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @AllArgsConstructor
-public abstract class AbstractJdbcRepository {
+public class BaseJdbcRepository {
 
 	/** The data source used for obtaining database connections. */
 	protected final DataSource dataSource;
@@ -61,26 +62,27 @@ public abstract class AbstractJdbcRepository {
 	 * @throws IllegalArgumentException if sql is null or empty
 	 * @throws NullPointerException if paramsSetter is null
 	 */
-	protected Long executeInsertAndReturnId(String sql, PreparedStatementConsumer paramsSetter) {
+	protected Long executeInsertAndReturnId(
+			final String sql, final PreparedStatementConsumer paramsSetter) {
 		try (Connection conn = dataSource.getConnection();
 				PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 			paramsSetter.accept(stmt);
 
-			int rowsAffected = stmt.executeUpdate();
+			final int rowsAffected = stmt.executeUpdate();
 			if (rowsAffected == 0) {
-				throw new SQLException("Insert failed, no rows affected.");
+				throw new DatabaseException("Insert failed, no rows affected.");
 			}
 
 			try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
 				if (generatedKeys.next()) {
 					return generatedKeys.getLong(1);
 				} else {
-					throw new SQLException("Insert failed, no ID obtained.");
+					throw new DatabaseException("Insert failed, no ID obtained.");
 				}
 			}
 		} catch (SQLException e) {
 			log.error("Database error during insert operation", e);
-			throw new RuntimeException("Database error", e);
+			throw new DatabaseException("Database error", e);
 		}
 	}
 
@@ -110,16 +112,18 @@ public abstract class AbstractJdbcRepository {
 	 * @throws NullPointerException if paramsSetter or mapper is null
 	 */
 	protected <T> Optional<T> executeSingleResultQuery(
-			String sql, PreparedStatementConsumer paramsSetter, ResultSetMapper<T> mapper) {
+			final String sql,
+			final PreparedStatementConsumer paramsSetter,
+			final ResultSetMapper<T> mapper) {
 		try (Connection conn = dataSource.getConnection();
 				PreparedStatement stmt = conn.prepareStatement(sql)) {
 			paramsSetter.accept(stmt);
-			ResultSet rs = stmt.executeQuery();
+			final ResultSet rs = stmt.executeQuery();
 
 			return rs.next() ? Optional.of(mapper.map(rs)) : Optional.empty();
 		} catch (SQLException e) {
 			log.error("Database error during query execution", e);
-			throw new RuntimeException("Database error", e);
+			throw new DatabaseException("Database error", e);
 		}
 	}
 
@@ -145,15 +149,17 @@ public abstract class AbstractJdbcRepository {
 	 * @throws IllegalArgumentException if sql is null or empty
 	 * @throws NullPointerException if paramsSetter is null
 	 */
-	protected boolean executeBooleanQuery(String sql, PreparedStatementConsumer paramsSetter) {
+	protected boolean executeBooleanQuery(
+			final String sql, final PreparedStatementConsumer paramsSetter) {
 		try (Connection conn = dataSource.getConnection();
 				PreparedStatement stmt = conn.prepareStatement(sql)) {
 			paramsSetter.accept(stmt);
-			ResultSet rs = stmt.executeQuery();
-			return rs.next();
+			try (ResultSet rs = stmt.executeQuery()) {
+				return rs.next();
+			}
 		} catch (SQLException e) {
 			log.error("Database error during boolean query", e);
-			throw new RuntimeException("Database error", e);
+			throw new DatabaseException("Database error", e);
 		}
 	}
 

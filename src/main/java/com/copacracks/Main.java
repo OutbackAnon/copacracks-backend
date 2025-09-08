@@ -12,11 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 @SuppressWarnings("PMD.UseUtilityClass")
 public class Main {
 	public static void main(String[] args) {
-		Injector injector = Guice.createInjector(new ApplicationModule());
+		final Injector injector = Guice.createInjector(new ApplicationModule());
 
-		UserController userController = injector.getInstance(UserController.class);
+		final UserController userController = injector.getInstance(UserController.class);
 
-		Javalin app =
+		final Javalin app =
 				Javalin.create(
 						config -> {
 							config.bundledPlugins.enableCors(
@@ -42,7 +42,7 @@ public class Main {
 				});
 
 		// Iniciar servidor
-		int port = Integer.parseInt(System.getProperty("server.port", "8080"));
+		final int port = Integer.parseInt(System.getProperty("server.port", "8080"));
 		app.start(port);
 
 		log.info("Servidor iniciado na porta {}", port);

@@ -3,7 +3,9 @@ package com.copacracks.infrastructure.mapper;
 import com.copacracks.domain.model.user.User;
 import com.copacracks.infrastructure.persistence.entity.UserEntity;
 import java.sql.Timestamp;
-import java.time.ZoneOffset;
+import java.time.Instant;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 /**
  * Utility class for mapping between User domain model and UserEntity persistence model.
@@ -22,6 +24,8 @@ import java.time.ZoneOffset;
  *
  * <p>This class is stateless and thread-safe, providing only static utility methods.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@SuppressWarnings({"PMD.ReplaceJavaUtilDate", "PMD.LawOfDemeter"})
 public final class UserMapper {
 
 	/**
@@ -44,8 +48,9 @@ public final class UserMapper {
 	 * @throws IllegalArgumentException if user is null
 	 * @throws NullPointerException if user.getCreateAt() returns null
 	 */
-	public static UserEntity fromModel(User user) {
-		var timestamp = Timestamp.from(user.getCreateAt().toInstant(ZoneOffset.UTC));
+	public static UserEntity fromModel(final User user) {
+		final Instant createAt = user.getCreateAt();
+		final Timestamp timestamp = Timestamp.from(createAt);
 
 		return UserEntity.builder()
 				.username(user.getUsername())
@@ -76,15 +81,16 @@ public final class UserMapper {
 	 * @throws IllegalArgumentException if userEntity is null
 	 * @throws NullPointerException if any required entity field is null
 	 */
-	public static User toModel(UserEntity userEntity) {
+	public static User toModel(final UserEntity userEntity) {
+		final Timestamp entityCreatedAt = userEntity.getCreatedAt();
+		final Instant createdAtInstant = entityCreatedAt.toInstant();
+
 		return new User(
 				userEntity.getId(),
 				userEntity.getUsername(),
 				null,
 				userEntity.getEmail(),
 				userEntity.getPassword(),
-				userEntity.getCreatedAt().toLocalDateTime());
+				createdAtInstant);
 	}
-
-	private UserMapper() {}
 }

@@ -10,7 +10,9 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import javax.sql.DataSource;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class ApplicationModule extends AbstractModule {
 	@Override
 	protected void configure() {

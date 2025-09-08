@@ -12,18 +12,19 @@ public class CreateUserCaseImpl implements CreateUserCase {
 	private final PasswordHasher passwordHasher;
 
 	@Inject
-	public CreateUserCaseImpl(UserRepository userRepository, PasswordHasher passwordHasher) {
+	public CreateUserCaseImpl(
+			final UserRepository userRepository, final PasswordHasher passwordHasher) {
 		this.userRepository = userRepository;
 		this.passwordHasher = passwordHasher;
 	}
 
 	@Override
-	public void execute(CreateUserRequestDto userDto) {
-		var user = new User(userDto.username(), userDto.password(), userDto.email());
-		var hash = passwordHasher.createHash(userDto.password());
+	public void execute(final CreateUserRequestDto userDto) {
+		final User user = new User(userDto.username(), userDto.password(), userDto.email());
+		final String hash = passwordHasher.createHash(userDto.password());
 
-		var userWithhashedPassword = user.withHashedPassword(hash);
+		final User userWithHashedPw = user.withHashedPassword(hash);
 
-		userRepository.save(userWithhashedPassword);
+		userRepository.save(userWithHashedPw);
 	}
 }

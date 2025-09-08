@@ -31,7 +31,13 @@
             <property name="minimum" value="1"/>
         </properties>
     </rule>
-    
+
+    <rule ref="category/java/codestyle.xml/LongVariable">
+        <properties>
+            <property name="minimum" value="20" />
+        </properties>
+    </rule>
+
     <!-- Desabilita a regra UseUtilityClass para permitir construtores públicos em classes como Main -->
     <rule ref="category/java/design.xml/UseUtilityClass">
         <priority>5</priority>

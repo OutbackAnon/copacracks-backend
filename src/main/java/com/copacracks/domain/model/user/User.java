@@ -1,7 +1,7 @@
 package com.copacracks.domain.model.user;
 
 import com.copacracks.domain.exception.UserValidationException;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -26,7 +26,7 @@ public class User {
 	private final Password password;
 	private final Email email;
 	private final String hashedPassword;
-	private final LocalDateTime createdAt;
+	private final Instant createdAt;
 
 	/**
 	 * Constructor for creating a new user with plain text password.
@@ -40,7 +40,7 @@ public class User {
 	 * @throws UserValidationException if any of the parameters fail validation
 	 */
 	public User(final String username, final String password, final String email) {
-		this(null, username, password, email, null, LocalDateTime.now());
+		this(null, username, password, email, null, Instant.now());
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class User {
 			final String password,
 			final String email,
 			final String hashedPassword,
-			final LocalDateTime createdAt) {
+			final Instant createdAt) {
 		this.id = id;
 		this.username = new Username(username);
 		this.password = new Password(password);
@@ -90,7 +90,7 @@ public class User {
 			final String username,
 			final String hashedPassword,
 			final String email,
-			final LocalDateTime createdAt) {
+			final Instant createdAt) {
 		this.id = id;
 		this.username = new Username(username);
 		this.password = null;
@@ -118,7 +118,7 @@ public class User {
 			final Password password,
 			final Email email,
 			final String hashedPassword,
-			final LocalDateTime createdAt) {
+			final Instant createdAt) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
@@ -265,7 +265,7 @@ public class User {
 	 *
 	 * @return the creation date and time
 	 */
-	public LocalDateTime getCreateAt() {
+	public Instant getCreateAt() {
 		return createdAt;
 	}
 

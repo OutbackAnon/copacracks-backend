@@ -5,6 +5,7 @@ import com.copacracks.application.usecases.CreateUserCase;
 import com.copacracks.domain.exception.UserValidationException;
 import com.copacracks.infrastructure.dto.ErrorResponse;
 import com.copacracks.infrastructure.dto.UserResponse;
+import com.copacracks.infrastructure.exception.ControllerException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.javalin.http.Context;
@@ -37,9 +38,9 @@ public class UserController {
 	 *
 	 * @param ctx the Javalin HTTP context containing the request data and response object
 	 */
-	public void registerUser(Context ctx) {
+	public void registerUser(final Context ctx) {
 		try {
-			CreateUserRequestDto request = ctx.bodyAsClass(CreateUserRequestDto.class);
+			final CreateUserRequestDto request = ctx.bodyAsClass(CreateUserRequestDto.class);
 
 			createUserCase.execute(request);
 
@@ -47,11 +48,15 @@ public class UserController {
 			ctx.json(new UserResponse(1L, request.username(), request.email()));
 
 		} catch (UserValidationException e) {
-			log.warn("User validation error: {}", e.getMessage());
+			if (log.isErrorEnabled()) {
+				log.error("User validation error: {}", e.getMessage());
+			}
 			ctx.status(HttpStatus.BAD_REQUEST);
 			ctx.json(new ErrorResponse("VALIDATION_ERROR", e.getMessage()));
-		} catch (Exception e) {
-			log.error("Error registering user", e);
+		} catch (ControllerException e) {
+			if (log.isErrorEnabled()) {
+				log.error("Error registering user", e);
+			}
 			ctx.status(HttpStatus.INTERNAL_SERVER_ERROR);
 			ctx.json(new ErrorResponse("INTERNAL_ERROR", "Internal server error"));
 		}

@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Builder
 @Data
+@SuppressWarnings({"PMD.ReplaceJavaUtilDate"})
 public class UserEntity {
 	private final Long id;
 	private final String username;

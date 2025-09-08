@@ -3,11 +3,12 @@ package com.copacracks.infrastructure.persistence.repository;
 import com.copacracks.domain.model.user.User;
 import com.copacracks.domain.repository.UserRepository;
 import com.copacracks.infrastructure.mapper.UserMapper;
+import com.copacracks.infrastructure.persistence.entity.UserEntity;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Singleton
-public class JdbcUserRepository extends AbstractJdbcRepository implements UserRepository {
+public class JdbcUserRepository extends BaseJdbcRepository implements UserRepository {
 
 	/** SQL statement for inserting a new user with auto-generated ID. */
 	private static final String INSERT_USER =
@@ -61,7 +62,7 @@ public class JdbcUserRepository extends AbstractJdbcRepository implements UserRe
 	 * @param dataSource the DataSource for obtaining database connections
 	 */
 	@Inject
-	public JdbcUserRepository(DataSource dataSource) {
+	public JdbcUserRepository(final DataSource dataSource) {
 		super(dataSource);
 	}
 
@@ -79,7 +80,7 @@ public class JdbcUserRepository extends AbstractJdbcRepository implements UserRe
 	 * @throws IllegalArgumentException if user is null
 	 */
 	@Override
-	public User save(User user) {
+	public User save(final User user) {
 		if (user.isNew()) {
 			return insertUser(user);
 		} else {
@@ -99,7 +100,7 @@ public class JdbcUserRepository extends AbstractJdbcRepository implements UserRe
 	 * @throws IllegalArgumentException if id is null
 	 */
 	@Override
-	public Optional<User> findById(Long id) {
+	public Optional<User> findById(final Long id) {
 		return executeSingleResultQuery(
 				FIND_BY_ID, stmt -> stmt.setLong(1, id), this::mapResultSetToUser);
 	}
@@ -116,7 +117,7 @@ public class JdbcUserRepository extends AbstractJdbcRepository implements UserRe
 	 * @throws IllegalArgumentException if username is null or empty
 	 */
 	@Override
-	public Optional<User> findByUsername(String username) {
+	public Optional<User> findByUsername(final String username) {
 		return executeSingleResultQuery(
 				FIND_BY_USERNAME, stmt -> stmt.setString(1, username), this::mapResultSetToUser);
 	}
@@ -133,7 +134,7 @@ public class JdbcUserRepository extends AbstractJdbcRepository implements UserRe
 	 * @throws IllegalArgumentException if username is null or empty
 	 */
 	@Override
-	public boolean existsByUsername(String username) {
+	public boolean existsByUsername(final String username) {
 		return executeBooleanQuery(EXISTS_BY_USERNAME, stmt -> stmt.setString(1, username));
 	}
 
@@ -153,9 +154,9 @@ public class JdbcUserRepository extends AbstractJdbcRepository implements UserRe
 	 * @return a new User instance with the generated database ID
 	 * @throws RuntimeException if a database error occurs during insertion
 	 */
-	private User insertUser(User user) {
-		var mappedUser = UserMapper.fromModel(user);
-		Long generateId =
+	private User insertUser(final User user) {
+		final UserEntity mappedUser = UserMapper.fromModel(user);
+		final Long generateId =
 				executeInsertAndReturnId(
 						INSERT_USER,
 						stmt -> {
@@ -194,13 +195,13 @@ public class JdbcUserRepository extends AbstractJdbcRepository implements UserRe
 	 * @return a new User instance populated with data from the ResultSet
 	 * @throws SQLException if a database access error occurs or column is missing
 	 */
-	private User mapResultSetToUser(ResultSet rs) throws SQLException {
+	private User mapResultSetToUser(final ResultSet rs) throws SQLException {
 		return new User(
 				rs.getLong("id"),
 				rs.getString("username"),
 				rs.getString("password_raw"),
 				rs.getString("email"),
 				rs.getString("password_hash"),
-				rs.getObject("created_at", LocalDateTime.class));
+				rs.getObject("created_at", Instant.class));
 	}
 }
