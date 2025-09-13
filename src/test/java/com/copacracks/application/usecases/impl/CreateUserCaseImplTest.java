@@ -214,9 +214,9 @@ class CreateUserCaseImplTest {
 	@DisplayName("Deve criar usuário com dados mínimos válidos")
 	void shouldCreateUserWithMinimalValidData() {
 		// Given
-		final String minimalUsername = "abc"; // tamanho mínimo válido
+		final String minimalUsername = "abc";
 		final String minimalEmail = "a@b.co";
-		final String minimalPassword = "Pass1!"; // senha mínima válida (assumindo)
+		final String minimalPassword = "Pass1!@740f";
 
 		final CreateUserRequestDto requestDto =
 				new CreateUserRequestDto(minimalUsername, minimalEmail, minimalPassword);

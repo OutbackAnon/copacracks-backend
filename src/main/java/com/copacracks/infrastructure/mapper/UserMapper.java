@@ -88,9 +88,8 @@ public final class UserMapper {
 		return new User(
 				userEntity.getId(),
 				userEntity.getUsername(),
-				null,
-				userEntity.getEmail(),
 				userEntity.getPassword(),
+				userEntity.getEmail(),
 				createdAtInstant);
 	}
 }

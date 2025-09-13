@@ -5,13 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7eb873b1-bf5c-44df-8641-ee9810454e29" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/copacracks/application/usecases/impl/CreateUserCaseImplTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/copacracks/infrastructure/mapper/UserMapperTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/libs.versions.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/copacracks/domain/model/user/UserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/copacracks/domain/model/user/UserTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/copacracks/infrastructure/mapper/UserMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/copacracks/infrastructure/mapper/UserMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/copacracks/application/usecases/impl/CreateUserCaseImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/copacracks/application/usecases/impl/CreateUserCaseImplTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/copacracks/infrastructure/mapper/UserMapperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/copacracks/infrastructure/mapper/UserMapperTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +54,11 @@
     </system>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="develop" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GradleScriptDefinitionsStorage" workingDir="$PROJECT_DIR$" gradleHome="C://wsl.localhost/Ubuntu/home/leona/.gradle/wrapper/dists/gradle-8.14.3-bin/cv11ve7ro1n3o1j4so8xd9n66/gradle-8.14.3" javaHome="C:\home\leona\.sdkman\candidates\java\21.0.8-tem" gradleVersion="8.14.3">
@@ -71,7 +75,7 @@
   &quot;associatedIndex&quot;: 1
 }</component>
   <component name="ProjectId" id="313vMcxzaVOKko3uoSfbEGX0zsG" />
-  <component name="ProjectLevelVcsManager">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
@@ -100,7 +104,7 @@
       <recent name="$PROJECT_DIR$/config/checkstyle" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.UserTest">
+  <component name="RunManager" selected="Gradle.UtilityClassStructureTests.shouldBeUtilityClassWithPrivateConstructor">
     <configuration name="CreateUserCaseImplTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -115,6 +119,30 @@
             <option value=":test" />
             <option value="--tests" />
             <option value="&quot;com.copacracks.application.usecases.impl.CreateUserCaseImplTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <ForceTestExec>true</ForceTestExec>
+      <method v="2" />
+    </configuration>
+    <configuration name="CreateUserCaseImplTest.shouldCreateUserWithMinimalValidData" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.copacracks.application.usecases.impl.CreateUserCaseImplTest.shouldCreateUserWithMinimalValidData&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -149,30 +177,6 @@
       <ForceTestExec>true</ForceTestExec>
       <method v="2" />
     </configuration>
-    <configuration name="UserTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;com.copacracks.domain.model.user.UserTest&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <ForceTestExec>true</ForceTestExec>
-      <method v="2" />
-    </configuration>
     <configuration name="UserValidationExceptionTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -197,35 +201,37 @@
       <ForceTestExec>true</ForceTestExec>
       <method v="2" />
     </configuration>
-    <configuration name="copacracks-backend [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="UtilityClassStructureTests.shouldBeUtilityClassWithPrivateConstructor" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
+        <option name="scriptParameters" value="" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
           <list>
-            <option value="build" />
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.copacracks.infrastructure.mapper.UserMapperTest$UtilityClassStructureTests.shouldBeUtilityClassWithPrivateConstructor&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <ForceTestExec>false</ForceTestExec>
+      <ForceTestExec>true</ForceTestExec>
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.UserTest" />
-        <item itemvalue="Gradle.UserValidationExceptionTest" />
-        <item itemvalue="Gradle.CreateUserCaseImplTest" />
+        <item itemvalue="Gradle.UtilityClassStructureTests.shouldBeUtilityClassWithPrivateConstructor" />
         <item itemvalue="Gradle.UserMapperTest" />
-        <item itemvalue="Gradle.copacracks-backend [build]" />
+        <item itemvalue="Gradle.CreateUserCaseImplTest.shouldCreateUserWithMinimalValidData" />
+        <item itemvalue="Gradle.CreateUserCaseImplTest" />
+        <item itemvalue="Gradle.UserValidationExceptionTest" />
       </list>
     </recent_temporary>
   </component>

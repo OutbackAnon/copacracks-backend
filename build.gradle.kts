@@ -89,7 +89,9 @@ dependencies {
 
     spotbugsPlugins(libs.findsecbugs.plugin)
     testImplementation(platform(libs.junit.bom))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+//    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.13.4")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation(libs.bundles.testcontainers)
     testImplementation(libs.assertj)
     testImplementation(libs.bundles.mockito)
