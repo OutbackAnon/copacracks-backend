@@ -16,6 +16,7 @@ testcontainers-postgre = "1.21.3"
 assertj = "4.0.0-M1"
 bouncycastle = "1.81"
 mockito = "5.19.0"
+mockito-junit = "5.19.0"
 rewrite = "7.14.1"
 rewrite-staticanalysis = "2.16.0"
 
@@ -36,10 +37,12 @@ testcontainers-postgre = { module = "org.testcontainers:postgresql", version.ref
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 bouncycastle = { module = "org.bouncycastle:bcpkix-jdk18on", version.ref = "bouncycastle" }
 mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockito-junit = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito-junit" }
 rewrite-recipe-staticanalysis = { module = "org.openrewrite.recipe:rewrite-static-analysise", version.ref = "rewrite-staticanalysis" }
 
 [bundles]
 testcontainers = ["testcontainers-junit", "testcontainers-postgre"]
+mockito = ["mockito", "mockito-junit"]
 flyway = ["flyway-core", "flyway-postgre"]
 
 [plugins]

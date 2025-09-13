@@ -22,12 +22,9 @@ pmd {
     isIgnoreFailures = false
 }
 
-rewrite {
-    // activeRecipe("org.openrewrite.staticanalysis.CodeCleanup")
-    // activeRecipe("org.openrewrite.checkstyle.Checkstyle")
-    activeRecipe("org.openrewrite.staticanalysis.CommonStaticAnalysis")
-    checkstyleConfigFile = file("config/checkstyle/checkstyle.xml")
-}
+//rewrite {
+//    activeRecipe("org.openrewrite.staticanalysis.CommonStaticAnalysis")
+//}
 
 spotbugs {
     effort.set(Effort.MAX)
@@ -91,14 +88,11 @@ dependencies {
     testAnnotationProcessor(libs.lombok)
 
     spotbugsPlugins(libs.findsecbugs.plugin)
-    // rewrite(libs.rewrite.recipe.staticanalysis)
-    rewrite("org.openrewrite.recipe:rewrite-static-analysis:latest.release")
-
     testImplementation(platform(libs.junit.bom))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation(libs.bundles.testcontainers)
     testImplementation(libs.assertj)
-    testImplementation(libs.mockito)
+    testImplementation(libs.bundles.mockito)
 }
 
 configurations.all {
