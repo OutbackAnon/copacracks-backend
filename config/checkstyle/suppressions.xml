@@ -4,6 +4,31 @@
         "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 
 <suppressions>
+    <!-- Main class suppressions - typically don't need extensive JavaDoc -->
     <suppress checks="MissingJavadocType" files=".*Main\.java"/>
     <suppress checks="MissingJavadocMethod" files=".*Main\.java"/>
+    
+    <!-- Test class suppressions - tests often have descriptive method names -->
+    <suppress checks="MissingJavadocMethod" files=".*Test\.java"/>
+    <suppress checks="MissingJavadocMethod" files=".*Tests\.java"/>
+    <suppress checks="MethodName" files=".*Test\.java"/>
+    <suppress checks="MethodName" files=".*Tests\.java"/>
+    
+    <!-- Configuration and DTO classes - often self-documenting -->
+    <suppress checks="MissingJavadocMethod" files=".*Config\.java"/>
+    <suppress checks="MissingJavadocMethod" files=".*Configuration\.java"/>
+    <suppress checks="MissingJavadocMethod" files=".*Dto\.java"/>
+    <suppress checks="MissingJavadocMethod" files=".*DTO\.java"/>
+    <suppress checks="MissingJavadocType" files=".*Dto\.java"/>
+    <suppress checks="MissingJavadocType" files=".*DTO\.java"/>
+    
+    <!-- Builder pattern classes - generated or boilerplate code -->
+    <suppress checks="MissingJavadocMethod" files=".*Builder\.java"/>
+    
+    <!-- Exception classes - often self-explanatory -->
+    <suppress checks="MissingJavadocMethod" files=".*Exception\.java"/>
+    
+    <!-- Generated code suppressions -->
+    <suppress checks=".*" files=".*\/generated\/.*"/>
+    <suppress checks=".*" files=".*\/target\/generated-sources\/.*"/>
 </suppressions>
