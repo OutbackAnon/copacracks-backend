@@ -44,7 +44,7 @@ public class UserController {
 			final CreateUserRequestDto request = ctx.bodyAsClass(CreateUserRequestDto.class);
 
 			createUserCase.execute(
-					new NewUserDto(request.username(), request.email(), request.password()));
+					new NewUserDto(request.username(), request.password(), request.email()));
 
 			ctx.status(HttpStatus.CREATED);
 			ctx.json(new UserResponse(1L, request.username(), request.email()));
