@@ -43,7 +43,7 @@ public class UserMapperTest {
 			assertThat(result).isNotNull();
 			assertThat(result.getUsername()).isEqualTo(VALID_USERNAME);
 			assertThat(result.getEmail()).isEqualTo(VALID_EMAIL);
-			assertThat(result.getPassword()).isEqualTo(VALID_HASHED_PASSWORD);
+			assertThat(result.getPassword()).isEqualTo(VALID_PASSWORD);
 			assertThat(result.getCreatedAt()).isEqualTo(Timestamp.from(VALID_CREATE_AT));
 			// ID should not be mapped in fromModel (handled by persistence layer)
 			assertThat(result.getId()).isNull();
@@ -96,23 +96,15 @@ public class UserMapperTest {
 		}
 
 		private User createValidUser() {
-			return new User(
-					VALID_ID,
-					VALID_USERNAME,
-					VALID_PASSWORD,
-					VALID_EMAIL,
-					VALID_HASHED_PASSWORD,
-					VALID_CREATE_AT);
+			return new User(VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, VALID_CREATE_AT);
 		}
 
 		private User createUserWithCreatedAt(Instant createdAt) {
-			return new User(
-					VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, VALID_HASHED_PASSWORD, createdAt);
+			return new User(VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, createdAt);
 		}
 
 		private User createUserWithNullCreatedAt() {
-			return new User(
-					VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, VALID_HASHED_PASSWORD, null);
+			return new User(VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, null);
 		}
 	}
 
@@ -134,7 +126,6 @@ public class UserMapperTest {
 			assertThat(result.getId()).isEqualTo(VALID_ID);
 			assertThat(result.getUsername()).isEqualTo(VALID_USERNAME);
 			assertThat(result.getEmail()).isEqualTo(VALID_EMAIL);
-			assertThat(result.getHashedPassword()).isEqualTo(VALID_HASHED_PASSWORD);
 			assertThat(result.getCreateAt()).isEqualTo(VALID_CREATE_AT);
 		}
 
@@ -234,7 +225,6 @@ public class UserMapperTest {
 			// Then - Verify data consistency (excluding plain password which is lost)
 			assertThat(convertedUser.getUsername()).isEqualTo(originalUser.getUsername());
 			assertThat(convertedUser.getEmail()).isEqualTo(originalUser.getEmail());
-			assertThat(convertedUser.getHashedPassword()).isEqualTo(originalUser.getHashedPassword());
 			assertThat(convertedUser.getCreateAt()).isEqualTo(originalUser.getCreateAt());
 		}
 
@@ -251,18 +241,11 @@ public class UserMapperTest {
 			// Then - Results should be identical
 			assertThat(secondRoundTrip.getUsername()).isEqualTo(firstRoundTrip.getUsername());
 			assertThat(secondRoundTrip.getEmail()).isEqualTo(firstRoundTrip.getEmail());
-			assertThat(secondRoundTrip.getHashedPassword()).isEqualTo(firstRoundTrip.getHashedPassword());
 			assertThat(secondRoundTrip.getCreateAt()).isEqualTo(firstRoundTrip.getCreateAt());
 		}
 
 		private User createOriginalUser() {
-			return new User(
-					VALID_ID,
-					VALID_USERNAME,
-					VALID_PASSWORD,
-					VALID_EMAIL,
-					VALID_HASHED_PASSWORD,
-					VALID_CREATE_AT);
+			return new User(VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, VALID_CREATE_AT);
 		}
 	}
 
@@ -313,14 +296,7 @@ public class UserMapperTest {
 			// Given - Username max 50 chars, Email with valid format
 			String maxUsername = "a".repeat(50); // Maximum allowed length
 			String validLongEmail = "test" + "a".repeat(60) + "@example.com"; // Valid but long email
-			User user =
-					new User(
-							VALID_ID,
-							maxUsername,
-							VALID_PASSWORD,
-							validLongEmail,
-							VALID_HASHED_PASSWORD,
-							VALID_CREATE_AT);
+			User user = new User(VALID_ID, maxUsername, VALID_PASSWORD, validLongEmail, VALID_CREATE_AT);
 
 			// When
 			UserEntity entity = UserMapper.fromModel(user);
@@ -337,14 +313,7 @@ public class UserMapperTest {
 			// Given - Username with underscore (valid), Email with plus and hyphen (valid)
 			String validUsername = "user_name123";
 			String validEmail = "test+special@domain-name.co.uk";
-			User user =
-					new User(
-							VALID_ID,
-							validUsername,
-							VALID_PASSWORD,
-							validEmail,
-							VALID_HASHED_PASSWORD,
-							VALID_CREATE_AT);
+			User user = new User(VALID_ID, validUsername, VALID_PASSWORD, validEmail, VALID_CREATE_AT);
 
 			// When
 			UserEntity entity = UserMapper.fromModel(user);
@@ -362,13 +331,7 @@ public class UserMapperTest {
 			String mixedCaseUsername = "User123_Test";
 			String mixedCaseEmail = "Test.User123@Example.Com";
 			User user =
-					new User(
-							VALID_ID,
-							mixedCaseUsername,
-							VALID_PASSWORD,
-							mixedCaseEmail,
-							VALID_HASHED_PASSWORD,
-							VALID_CREATE_AT);
+					new User(VALID_ID, mixedCaseUsername, VALID_PASSWORD, mixedCaseEmail, VALID_CREATE_AT);
 
 			// When
 			UserEntity entity = UserMapper.fromModel(user);

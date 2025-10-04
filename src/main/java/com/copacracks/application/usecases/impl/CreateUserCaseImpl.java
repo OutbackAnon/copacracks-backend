@@ -1,6 +1,6 @@
 package com.copacracks.application.usecases.impl;
 
-import com.copacracks.application.dto.CreateUserRequestDto;
+import com.copacracks.application.dto.NewUserDto;
 import com.copacracks.application.security.PasswordHasher;
 import com.copacracks.application.usecases.CreateUserCase;
 import com.copacracks.domain.model.user.User;
@@ -19,12 +19,12 @@ public class CreateUserCaseImpl implements CreateUserCase {
 	}
 
 	@Override
-	public void execute(final CreateUserRequestDto userDto) {
-		final User user = new User(userDto.username(), userDto.password(), userDto.email());
-		final String hash = passwordHasher.createHash(userDto.password());
+	public void execute(final NewUserDto userDto) {
+		User.verifyPasswordStrength(userDto.rawPassword());
 
-		final User userWithHashedPw = user.withHashedPassword(hash);
+		final String hashedPassword = passwordHasher.createHash(userDto.rawPassword());
+		final User user = new User(userDto.username(), hashedPassword, userDto.email());
 
-		userRepository.save(userWithHashedPw);
+		userRepository.save(user);
 	}
 }

@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * JDBC-based implementation of the UserRepository interface.
  *
  * <p>This repository provides persistent storage operations for User entities using direct JDBC
- * operations. It extends {@link AbstractJdbcRepository} to leverage common database utilities while
+ * operations. It extends {@link BaseJdbcRepository} to leverage common database utilities while
  * implementing the specific business logic for user data access.
  *
  * <p>Key features:
@@ -39,16 +39,16 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 
 	/** SQL statement for inserting a new user with auto-generated ID. */
 	private static final String INSERT_USER =
-			"INSERT INTO users (username, password_hash, email, created_at) "
+			"INSERT INTO users (username, password, email, created_at) "
 					+ "VALUES (?, ?, ?, ?) RETURNING id";
 
 	/** SQL statement for finding a user by their unique identifier. */
 	private static final String FIND_BY_ID =
-			"SELECT id, username, password_hash, email FROM users WHERE id = ?";
+			"SELECT id, username, password, email FROM users WHERE id = ?";
 
 	/** SQL statement for finding a user by their username. */
 	private static final String FIND_BY_USERNAME =
-			"SELECT id, username, password_hash, email FROM users " + "WHERE username = ?";
+			"SELECT id, username, password, email FROM users " + "WHERE username = ?";
 
 	/** SQL statement for checking if a username exists in the database. */
 	private static final String EXISTS_BY_USERNAME = "SELECT 1 FROM users WHERE username = ? LIMIT 1";
@@ -167,11 +167,7 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 						});
 
 		return new User(
-				generateId,
-				user.getUsername(),
-				user.getHashedPassword(),
-				user.getEmail(),
-				user.getCreateAt());
+				generateId, user.getUsername(), user.getPassword(), user.getEmail(), user.getCreateAt());
 	}
 
 	/**
@@ -199,9 +195,8 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 		return new User(
 				rs.getLong("id"),
 				rs.getString("username"),
-				rs.getString("password_raw"),
+				rs.getString("password"),
 				rs.getString("email"),
-				rs.getString("password_hash"),
 				rs.getObject("created_at", Instant.class));
 	}
 }

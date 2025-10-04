@@ -18,6 +18,8 @@ class UserTest {
 			final String username, final String password, final String email) {
 		boolean thrown;
 		try {
+			User.verifyPasswordStrength(password);
+
 			new User(username, password, email);
 			thrown = false;
 		} catch (UserValidationException ex) {
@@ -28,20 +30,12 @@ class UserTest {
 
 	@Test
 	void shouldCreateValidUser() {
-		// Given
-		final String username = USERNAME;
-		final String password = PASSWORD;
-		final String email = EMAIL;
-
 		// When
-		final User user = new User(username, password, email);
+		final User user = new User(USERNAME, PASSWORD, EMAIL);
 
 		// Then
 		assertTrue(
-				user != null
-						&& username.equals(user.getUsername())
-						&& email.equals(user.getEmail())
-						&& user.isNew(),
+				USERNAME.equals(user.getUsername()) && EMAIL.equals(user.getEmail()) && user.isNew(),
 				"Deve criar usuário válido com propriedades corretas e estado 'novo'.");
 	}
 
@@ -130,12 +124,9 @@ class UserTest {
 	void shouldCreateUserWithId() {
 		// Given
 		final Long id = 1L;
-		final String username = USERNAME;
-		final String password = PASSWORD;
-		final String email = EMAIL;
 
 		// When
-		final User user = new User(id, username, password, email, null, Instant.now());
+		final User user = new User(id, USERNAME, PASSWORD, EMAIL, Instant.now());
 
 		// Then
 		assertTrue(

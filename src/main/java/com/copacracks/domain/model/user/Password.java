@@ -49,9 +49,7 @@ public record Password(String value) {
 	 * @throws UserValidationException if the password does not meet any of the validation
 	 *     requirements
 	 */
-	public Password {
-		validatePlainPassword(value);
-	}
+	public Password {}
 
 	/**
 	 * Validates a plain text password against all security requirements.
@@ -62,7 +60,7 @@ public record Password(String value) {
 	 * @param plainPassword the password string to be validated
 	 * @throws UserValidationException if the password fails any validation rule
 	 */
-	private static void validatePlainPassword(final String plainPassword) {
+	public static void validatePlainPassword(final String plainPassword) {
 		ensureNotBlank(plainPassword);
 		ensureMinimumLength(plainPassword);
 		ensureContainsUppercase(plainPassword);
