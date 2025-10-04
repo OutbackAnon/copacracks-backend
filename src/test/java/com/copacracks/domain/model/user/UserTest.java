@@ -18,7 +18,7 @@ class UserTest {
 			final String username, final String password, final String email) {
 		boolean thrown;
 		try {
-            User.verifyPasswordStrength(password);
+			User.verifyPasswordStrength(password);
 
 			new User(username, password, email);
 			thrown = false;
@@ -35,9 +35,8 @@ class UserTest {
 
 		// Then
 		assertTrue(
-                USERNAME.equals(user.getUsername()) && EMAIL.equals(user.getEmail()) && user.isNew(),
+				USERNAME.equals(user.getUsername()) && EMAIL.equals(user.getEmail()) && user.isNew(),
 				"Deve criar usuário válido com propriedades corretas e estado 'novo'.");
-
 	}
 
 	@Test

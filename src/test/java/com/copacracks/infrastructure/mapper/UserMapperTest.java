@@ -96,22 +96,15 @@ public class UserMapperTest {
 		}
 
 		private User createValidUser() {
-			return new User(
-					VALID_ID,
-					VALID_USERNAME,
-					VALID_PASSWORD,
-					VALID_EMAIL,
-					VALID_CREATE_AT);
+			return new User(VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, VALID_CREATE_AT);
 		}
 
 		private User createUserWithCreatedAt(Instant createdAt) {
-			return new User(
-					VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, createdAt);
+			return new User(VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, createdAt);
 		}
 
 		private User createUserWithNullCreatedAt() {
-			return new User(
-					VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, null);
+			return new User(VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, null);
 		}
 	}
 
@@ -252,12 +245,7 @@ public class UserMapperTest {
 		}
 
 		private User createOriginalUser() {
-			return new User(
-					VALID_ID,
-					VALID_USERNAME,
-					VALID_PASSWORD,
-					VALID_EMAIL,
-					VALID_CREATE_AT);
+			return new User(VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, VALID_CREATE_AT);
 		}
 	}
 
@@ -308,13 +296,7 @@ public class UserMapperTest {
 			// Given - Username max 50 chars, Email with valid format
 			String maxUsername = "a".repeat(50); // Maximum allowed length
 			String validLongEmail = "test" + "a".repeat(60) + "@example.com"; // Valid but long email
-			User user =
-					new User(
-							VALID_ID,
-							maxUsername,
-							VALID_PASSWORD,
-							validLongEmail,
-							VALID_CREATE_AT);
+			User user = new User(VALID_ID, maxUsername, VALID_PASSWORD, validLongEmail, VALID_CREATE_AT);
 
 			// When
 			UserEntity entity = UserMapper.fromModel(user);
@@ -331,13 +313,7 @@ public class UserMapperTest {
 			// Given - Username with underscore (valid), Email with plus and hyphen (valid)
 			String validUsername = "user_name123";
 			String validEmail = "test+special@domain-name.co.uk";
-			User user =
-					new User(
-							VALID_ID,
-							validUsername,
-							VALID_PASSWORD,
-							validEmail,
-							VALID_CREATE_AT);
+			User user = new User(VALID_ID, validUsername, VALID_PASSWORD, validEmail, VALID_CREATE_AT);
 
 			// When
 			UserEntity entity = UserMapper.fromModel(user);
@@ -355,12 +331,7 @@ public class UserMapperTest {
 			String mixedCaseUsername = "User123_Test";
 			String mixedCaseEmail = "Test.User123@Example.Com";
 			User user =
-					new User(
-							VALID_ID,
-							mixedCaseUsername,
-							VALID_PASSWORD,
-							mixedCaseEmail,
-							VALID_CREATE_AT);
+					new User(VALID_ID, mixedCaseUsername, VALID_PASSWORD, mixedCaseEmail, VALID_CREATE_AT);
 
 			// When
 			UserEntity entity = UserMapper.fromModel(user);

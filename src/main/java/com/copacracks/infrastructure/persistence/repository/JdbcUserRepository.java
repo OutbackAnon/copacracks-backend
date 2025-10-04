@@ -167,11 +167,7 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 						});
 
 		return new User(
-				generateId,
-				user.getUsername(),
-				user.getPassword(),
-				user.getEmail(),
-				user.getCreateAt());
+				generateId, user.getUsername(), user.getPassword(), user.getEmail(), user.getCreateAt());
 	}
 
 	/**

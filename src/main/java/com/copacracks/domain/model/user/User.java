@@ -80,11 +80,7 @@ public class User {
 	 * @param createdAt the creation timestamp
 	 * @throws UserValidationException if any of the parameters fail validation
 	 */
-	public User(
-			final Long id,
-			final String username,
-			final String email,
-			final Instant createdAt) {
+	public User(final Long id, final String username, final String email, final Instant createdAt) {
 		this.id = id;
 		this.username = new Username(username);
 		this.password = null;
@@ -137,27 +133,22 @@ public class User {
 		return result;
 	}
 
-    public static void verifyPasswordStrength(String rawPassword) {
-        Password.validatePlainPassword(rawPassword);
-    }
+	public static void verifyPasswordStrength(String rawPassword) {
+		Password.validatePlainPassword(rawPassword);
+	}
 
 	/**
 	 * Creates a new User instance with a different password.
 	 *
 	 * <p>This method maintains immutability by returning a new User instance with the updated
-	 * password while keeping all other fields unchanged.
-	 *verifyPasswordStrength
+	 * password while keeping all other fields unchanged. verifyPasswordStrength
+	 *
 	 * @param newPassword the new plain text password
 	 * @return a new User instance with the updated password
 	 * @throws UserValidationException if the new password fails validation
 	 */
 	public User withNewPassword(final String newPassword) {
-		return new User(
-				this.id,
-				this.username,
-				new Password(newPassword),
-				this.email,
-				this.createdAt);
+		return new User(this.id, this.username, new Password(newPassword), this.email, this.createdAt);
 	}
 
 	/**
@@ -171,12 +162,7 @@ public class User {
 	 * @throws UserValidationException if the new email fails validation
 	 */
 	public User withNewEmail(final String newEmail) {
-		return new User(
-				this.id,
-				this.username,
-				this.password,
-				new Email(newEmail),
-				this.createdAt);
+		return new User(this.id, this.username, this.password, new Email(newEmail), this.createdAt);
 	}
 
 	/**
@@ -190,12 +176,7 @@ public class User {
 	 * @throws UserValidationException if the new username fails validation
 	 */
 	public User withNewUsername(final String newUsername) {
-		return new User(
-				this.id,
-				new Username(newUsername),
-				this.password,
-				this.email,
-				this.createdAt);
+		return new User(this.id, new Username(newUsername), this.password, this.email, this.createdAt);
 	}
 
 	/**
@@ -246,9 +227,9 @@ public class User {
 		return createdAt;
 	}
 
-    public String getPassword() {
-        return password.value();
-    }
+	public String getPassword() {
+		return password.value();
+	}
 
 	/**
 	 * Compares this user with another object for equality.
@@ -324,6 +305,7 @@ public class User {
 	@Override
 	public String toString() {
 		return String.format(
-				"User{id=%s, username='%s', email='%s', createdAt=''%s}", id, username.value(), email.value(), createdAt.toString());
+				"User{id=%s, username='%s', email='%s', createdAt=''%s}",
+				id, username.value(), email.value(), createdAt.toString());
 	}
 }

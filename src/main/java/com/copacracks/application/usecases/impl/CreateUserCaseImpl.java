@@ -23,7 +23,7 @@ public class CreateUserCaseImpl implements CreateUserCase {
 		User.verifyPasswordStrength(userDto.rawPassword());
 
 		final String hashedPassword = passwordHasher.createHash(userDto.rawPassword());
-        final User user = new User(userDto.username(), hashedPassword, userDto.email());
+		final User user = new User(userDto.username(), hashedPassword, userDto.email());
 
 		userRepository.save(user);
 	}
