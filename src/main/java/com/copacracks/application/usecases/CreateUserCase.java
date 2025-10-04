@@ -1,8 +1,9 @@
 package com.copacracks.application.usecases;
 
-import com.copacracks.application.dto.CreateUserRequestDto;
+import com.copacracks.application.dto.NewUserDto;
+import com.copacracks.infrastructure.dto.CreateUserRequestDto;
 
 @FunctionalInterface
 public interface CreateUserCase {
-	void execute(CreateUserRequestDto user);
+	void execute(NewUserDto user);
 }

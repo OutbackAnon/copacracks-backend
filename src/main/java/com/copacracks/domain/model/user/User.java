@@ -25,7 +25,6 @@ public class User {
 	private final Username username;
 	private final Password password;
 	private final Email email;
-	private final String hashedPassword;
 	private final Instant createdAt;
 
 	/**
@@ -40,7 +39,7 @@ public class User {
 	 * @throws UserValidationException if any of the parameters fail validation
 	 */
 	public User(final String username, final String password, final String email) {
-		this(null, username, password, email, null, Instant.now());
+		this(null, username, password, email, Instant.now());
 	}
 
 	/**
@@ -53,7 +52,6 @@ public class User {
 	 * @param username the username string value
 	 * @param password the plain text password string
 	 * @param email the email address string
-	 * @param hashedPassword the hashed password string, may be null
 	 * @param createdAt the creation timestamp
 	 * @throws UserValidationException if any of the parameters fail validation
 	 */
@@ -62,13 +60,11 @@ public class User {
 			final String username,
 			final String password,
 			final String email,
-			final String hashedPassword,
 			final Instant createdAt) {
 		this.id = id;
 		this.username = new Username(username);
 		this.password = new Password(password);
 		this.email = new Email(email);
-		this.hashedPassword = hashedPassword;
 		this.createdAt = createdAt;
 	}
 
@@ -80,7 +76,6 @@ public class User {
 	 *
 	 * @param id the unique identifier
 	 * @param username the username string value
-	 * @param hashedPassword the hashed password string
 	 * @param email the email address string
 	 * @param createdAt the creation timestamp
 	 * @throws UserValidationException if any of the parameters fail validation
@@ -88,14 +83,12 @@ public class User {
 	public User(
 			final Long id,
 			final String username,
-			final String hashedPassword,
 			final String email,
 			final Instant createdAt) {
 		this.id = id;
 		this.username = new Username(username);
 		this.password = null;
 		this.email = new Email(email);
-		this.hashedPassword = hashedPassword;
 		this.createdAt = createdAt;
 	}
 
@@ -109,7 +102,6 @@ public class User {
 	 * @param username the validated username value object
 	 * @param password the validated password value object, may be null
 	 * @param email the validated email value object
-	 * @param hashedPassword the hashed password string, may be null
 	 * @param createdAt the creation timestamp
 	 */
 	public User(
@@ -117,13 +109,11 @@ public class User {
 			final Username username,
 			final Password password,
 			final Email email,
-			final String hashedPassword,
 			final Instant createdAt) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.email = email;
-		this.hashedPassword = hashedPassword;
 		this.createdAt = createdAt;
 	}
 
@@ -147,12 +137,16 @@ public class User {
 		return result;
 	}
 
+    public static void verifyPasswordStrength(String rawPassword) {
+        Password.validatePlainPassword(rawPassword);
+    }
+
 	/**
 	 * Creates a new User instance with a different password.
 	 *
 	 * <p>This method maintains immutability by returning a new User instance with the updated
 	 * password while keeping all other fields unchanged.
-	 *
+	 *verifyPasswordStrength
 	 * @param newPassword the new plain text password
 	 * @return a new User instance with the updated password
 	 * @throws UserValidationException if the new password fails validation
@@ -163,7 +157,6 @@ public class User {
 				this.username,
 				new Password(newPassword),
 				this.email,
-				this.hashedPassword,
 				this.createdAt);
 	}
 
@@ -183,7 +176,6 @@ public class User {
 				this.username,
 				this.password,
 				new Email(newEmail),
-				this.hashedPassword,
 				this.createdAt);
 	}
 
@@ -203,22 +195,7 @@ public class User {
 				new Username(newUsername),
 				this.password,
 				this.email,
-				this.hashedPassword,
 				this.createdAt);
-	}
-
-	/**
-	 * Creates a new User instance with a different hashed password.
-	 *
-	 * <p>This method is typically used when updating the hashed password after password hashing
-	 * operations.
-	 *
-	 * @param hashedPassword the new hashed password
-	 * @return a new User instance with the updated hashed password
-	 */
-	public User withHashedPassword(final String hashedPassword) {
-		return new User(
-				this.id, this.username, this.password, this.email, hashedPassword, this.createdAt);
 	}
 
 	/**
@@ -269,14 +246,9 @@ public class User {
 		return createdAt;
 	}
 
-	/**
-	 * Returns the hashed password string.
-	 *
-	 * @return the hashed password, or null if not set
-	 */
-	public String getHashedPassword() {
-		return hashedPassword;
-	}
+    public String getPassword() {
+        return password.value();
+    }
 
 	/**
 	 * Compares this user with another object for equality.
@@ -352,6 +324,6 @@ public class User {
 	@Override
 	public String toString() {
 		return String.format(
-				"User{id=%s, username='%s', email='%s'}", id, username.value(), email.value());
+				"User{id=%s, username='%s', email='%s', createdAt=''%s}", id, username.value(), email.value(), createdAt.toString());
 	}
 }

@@ -51,6 +51,7 @@ public class PasswordHasherImpl implements PasswordHasher {
 		final Argon2BytesGenerator generator = new Argon2BytesGenerator();
 		generator.init(builder.build());
 
+
 		final byte[] result = new byte[32];
 
 		generator.generateBytes(rawPassword.getBytes(StandardCharsets.UTF_8), result, 0, result.length);

@@ -54,7 +54,7 @@ public final class UserMapper {
 
 		return UserEntity.builder()
 				.username(user.getUsername())
-				.password(user.getHashedPassword())
+				.password(user.getPassword())
 				.email(user.getEmail())
 				.createdAt(timestamp)
 				.build();

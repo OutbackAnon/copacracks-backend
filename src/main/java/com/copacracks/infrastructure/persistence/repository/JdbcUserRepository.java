@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * JDBC-based implementation of the UserRepository interface.
  *
  * <p>This repository provides persistent storage operations for User entities using direct JDBC
- * operations. It extends {@link AbstractJdbcRepository} to leverage common database utilities while
+ * operations. It extends {@link BaseJdbcRepository} to leverage common database utilities while
  * implementing the specific business logic for user data access.
  *
  * <p>Key features:
@@ -169,7 +169,7 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 		return new User(
 				generateId,
 				user.getUsername(),
-				user.getHashedPassword(),
+				user.getPassword(),
 				user.getEmail(),
 				user.getCreateAt());
 	}
@@ -199,9 +199,8 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 		return new User(
 				rs.getLong("id"),
 				rs.getString("username"),
-				rs.getString("password_raw"),
+				rs.getString("password"),
 				rs.getString("email"),
-				rs.getString("password_hash"),
 				rs.getObject("created_at", Instant.class));
 	}
 }

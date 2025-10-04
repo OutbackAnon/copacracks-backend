@@ -11,7 +11,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.copacracks.application.dto.CreateUserRequestDto;
+import com.copacracks.application.dto.NewUserDto;
+import com.copacracks.infrastructure.dto.CreateUserRequestDto;
 import com.copacracks.application.security.PasswordHasher;
 import com.copacracks.domain.exception.UserValidationException;
 import com.copacracks.domain.model.user.User;
@@ -48,8 +49,8 @@ class CreateUserCaseImplTest {
 	@DisplayName("Deve criar usuário com sucesso quando dados válidos são fornecidos")
 	void shouldCreateUserSuccessfully() {
 		// Given
-		final CreateUserRequestDto requestDto =
-				new CreateUserRequestDto(VALID_USERNAME, VALID_EMAIL, VALID_PASSWORD);
+		final NewUserDto requestDto =
+				new NewUserDto(VALID_USERNAME, VALID_EMAIL, VALID_PASSWORD);
 
 		when(passwordHasher.createHash(VALID_PASSWORD)).thenReturn(HASHED_PASSWORD);
 
@@ -67,7 +68,7 @@ class CreateUserCaseImplTest {
 				.as("Username deve ser preservado")
 				.isEqualTo(VALID_USERNAME);
 		assertThat(capturedUser.getEmail()).as("Email deve ser preservado").isEqualTo(VALID_EMAIL);
-		assertThat(capturedUser.getHashedPassword())
+		assertThat(capturedUser.getPassword())
 				.as("Senha hasheada deve ser definida")
 				.isEqualTo(HASHED_PASSWORD);
 		assertThat(capturedUser.isNew()).as("Usuário deve ser marcado como novo").isTrue();
@@ -77,11 +78,11 @@ class CreateUserCaseImplTest {
 	@DisplayName("Deve lançar UserValidationException quando username é inválido")
 	void shouldThrowExceptionWhenUsernameIsInvalid() {
 		// Given
-		final CreateUserRequestDto requestDto =
-				new CreateUserRequestDto("ab", VALID_EMAIL, VALID_PASSWORD); // username muito curto
+		final NewUserDto userDto =
+				new NewUserDto("ab", VALID_EMAIL, VALID_PASSWORD);
 
 		// When & Then
-		assertThatThrownBy(() -> createUserCase.execute(requestDto))
+		assertThatThrownBy(() -> createUserCase.execute(userDto))
 				.as("Deve lançar UserValidationException para username inválido")
 				.isInstanceOf(UserValidationException.class);
 
@@ -93,11 +94,11 @@ class CreateUserCaseImplTest {
 	@DisplayName("Deve lançar UserValidationException quando email é inválido")
 	void shouldThrowExceptionWhenEmailIsInvalid() {
 		// Given
-		final CreateUserRequestDto requestDto =
-				new CreateUserRequestDto(VALID_USERNAME, "email-invalido", VALID_PASSWORD);
+		final NewUserDto newUserDto =
+				new NewUserDto(VALID_USERNAME, "email-invalido", VALID_PASSWORD);
 
 		// When & Then
-		assertThatThrownBy(() -> createUserCase.execute(requestDto))
+		assertThatThrownBy(() -> createUserCase.execute(newUserDto))
 				.as("Deve lançar UserValidationException para email inválido")
 				.isInstanceOf(UserValidationException.class);
 
@@ -109,11 +110,11 @@ class CreateUserCaseImplTest {
 	@DisplayName("Deve lançar UserValidationException quando password é inválido")
 	void shouldThrowExceptionWhenPasswordIsInvalid() {
 		// Given
-		final CreateUserRequestDto requestDto =
-				new CreateUserRequestDto(VALID_USERNAME, VALID_EMAIL, "weak"); // senha fraca
+		final NewUserDto userDto =
+				new NewUserDto(VALID_USERNAME, VALID_EMAIL, "weak"); // senha fraca
 
 		// When & Then
-		assertThatThrownBy(() -> createUserCase.execute(requestDto))
+		assertThatThrownBy(() -> createUserCase.execute(userDto))
 				.as("Deve lançar UserValidationException para password inválido")
 				.isInstanceOf(UserValidationException.class);
 
@@ -125,11 +126,11 @@ class CreateUserCaseImplTest {
 	@DisplayName("Deve lançar UserValidationException quando username é nulo")
 	void shouldThrowExceptionWhenUsernameIsNull() {
 		// Given
-		final CreateUserRequestDto requestDto =
-				new CreateUserRequestDto(null, VALID_EMAIL, VALID_PASSWORD);
+		final NewUserDto userDto =
+				new NewUserDto(null, VALID_EMAIL, VALID_PASSWORD);
 
 		// When & Then
-		assertThatThrownBy(() -> createUserCase.execute(requestDto))
+		assertThatThrownBy(() -> createUserCase.execute(userDto))
 				.as("Deve lançar UserValidationException para username nulo")
 				.isInstanceOf(UserValidationException.class);
 
@@ -141,11 +142,11 @@ class CreateUserCaseImplTest {
 	@DisplayName("Deve lançar UserValidationException quando email é nulo")
 	void shouldThrowExceptionWhenEmailIsNull() {
 		// Given
-		final CreateUserRequestDto requestDto =
-				new CreateUserRequestDto(VALID_USERNAME, null, VALID_PASSWORD);
+		final NewUserDto userDto =
+				new NewUserDto(VALID_USERNAME, null, VALID_PASSWORD);
 
 		// When & Then
-		assertThatThrownBy(() -> createUserCase.execute(requestDto))
+		assertThatThrownBy(() -> createUserCase.execute(userDto))
 				.as("Deve lançar UserValidationException para email nulo")
 				.isInstanceOf(UserValidationException.class);
 
@@ -157,11 +158,11 @@ class CreateUserCaseImplTest {
 	@DisplayName("Deve lançar UserValidationException quando password é nulo")
 	void shouldThrowExceptionWhenPasswordIsNull() {
 		// Given
-		final CreateUserRequestDto requestDto =
-				new CreateUserRequestDto(VALID_USERNAME, VALID_EMAIL, null);
+		final NewUserDto userDto =
+				new NewUserDto(VALID_USERNAME, VALID_EMAIL, null);
 
 		// When & Then
-		assertThatThrownBy(() -> createUserCase.execute(requestDto))
+		assertThatThrownBy(() -> createUserCase.execute(userDto))
 				.as("Deve lançar UserValidationException para password nulo")
 				.isInstanceOf(UserValidationException.class);
 
@@ -173,14 +174,14 @@ class CreateUserCaseImplTest {
 	@DisplayName("Deve propagar exceção quando PasswordHasher falha")
 	void shouldPropagateExceptionWhenPasswordHasherFails() {
 		// Given
-		final CreateUserRequestDto requestDto =
-				new CreateUserRequestDto(VALID_USERNAME, VALID_EMAIL, VALID_PASSWORD);
+		final NewUserDto userDto =
+				new NewUserDto(VALID_USERNAME, VALID_EMAIL, VALID_PASSWORD);
 
 		final RuntimeException hashingException = new RuntimeException("Erro no hash da senha");
 		when(passwordHasher.createHash(VALID_PASSWORD)).thenThrow(hashingException);
 
 		// When & Then
-		assertThatThrownBy(() -> createUserCase.execute(requestDto))
+		assertThatThrownBy(() -> createUserCase.execute(userDto))
 				.as("Deve propagar exceção do PasswordHasher")
 				.isInstanceOf(RuntimeException.class)
 				.hasMessage("Erro no hash da senha");
@@ -193,15 +194,15 @@ class CreateUserCaseImplTest {
 	@DisplayName("Deve propagar exceção quando UserRepository falha")
 	void shouldPropagateExceptionWhenUserRepositoryFails() {
 		// Given
-		final CreateUserRequestDto requestDto =
-				new CreateUserRequestDto(VALID_USERNAME, VALID_EMAIL, VALID_PASSWORD);
+		final NewUserDto userDto =
+				new NewUserDto(VALID_USERNAME, VALID_EMAIL, VALID_PASSWORD);
 
 		when(passwordHasher.createHash(VALID_PASSWORD)).thenReturn(HASHED_PASSWORD);
 		final RuntimeException repositoryException = new RuntimeException("Erro no repositório");
 		doThrow(repositoryException).when(userRepository).save(any(User.class));
 
 		// When & Then
-		assertThatThrownBy(() -> createUserCase.execute(requestDto))
+		assertThatThrownBy(() -> createUserCase.execute(userDto))
 				.as("Deve propagar exceção do UserRepository")
 				.isInstanceOf(RuntimeException.class)
 				.hasMessage("Erro no repositório");
@@ -218,13 +219,13 @@ class CreateUserCaseImplTest {
 		final String minimalEmail = "a@b.co";
 		final String minimalPassword = "Pass1!@740f";
 
-		final CreateUserRequestDto requestDto =
-				new CreateUserRequestDto(minimalUsername, minimalEmail, minimalPassword);
+		final NewUserDto userDto =
+				new NewUserDto(minimalUsername, minimalEmail, minimalPassword);
 
 		when(passwordHasher.createHash(minimalPassword)).thenReturn(HASHED_PASSWORD);
 
 		// When
-		createUserCase.execute(requestDto);
+		createUserCase.execute(userDto);
 
 		// Then
 		final ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
@@ -233,20 +234,20 @@ class CreateUserCaseImplTest {
 		final User capturedUser = userCaptor.getValue();
 		assertThat(capturedUser.getUsername()).isEqualTo(minimalUsername);
 		assertThat(capturedUser.getEmail()).isEqualTo(minimalEmail);
-		assertThat(capturedUser.getHashedPassword()).isEqualTo(HASHED_PASSWORD);
+		assertThat(capturedUser.getPassword()).isEqualTo(HASHED_PASSWORD);
 	}
 
 	@Test
 	@DisplayName("Deve verificar se hash da senha é chamado com a senha correta")
 	void shouldCallPasswordHasherWithCorrectPassword() {
 		// Given
-		final CreateUserRequestDto requestDto =
-				new CreateUserRequestDto(VALID_USERNAME, VALID_EMAIL, VALID_PASSWORD);
+		final NewUserDto userDto =
+				new NewUserDto(VALID_USERNAME, VALID_EMAIL, VALID_PASSWORD);
 
 		when(passwordHasher.createHash(VALID_PASSWORD)).thenReturn(HASHED_PASSWORD);
 
 		// When
-		createUserCase.execute(requestDto);
+		createUserCase.execute(userDto);
 
 		// Then
 		verify(passwordHasher, times(1)).createHash(eq(VALID_PASSWORD));
@@ -260,13 +261,13 @@ class CreateUserCaseImplTest {
 		final String specificEmail = "specific@test.com";
 		final String specificPassword = "SpecificPass123!";
 
-		final CreateUserRequestDto requestDto =
-				new CreateUserRequestDto(specificUsername, specificEmail, specificPassword);
+		final NewUserDto userDto =
+				new NewUserDto(specificUsername, specificEmail, specificPassword);
 
 		when(passwordHasher.createHash(specificPassword)).thenReturn(HASHED_PASSWORD);
 
 		// When
-		createUserCase.execute(requestDto);
+		createUserCase.execute(userDto);
 
 		// Then
 		final ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
@@ -279,7 +280,7 @@ class CreateUserCaseImplTest {
 		assertThat(capturedUser.getEmail())
 				.as("Email específico deve ser preservado")
 				.isEqualTo(specificEmail);
-		assertThat(capturedUser.getHashedPassword())
+		assertThat(capturedUser.getPassword())
 				.as("Hash da senha deve ser aplicado corretamente")
 				.isEqualTo(HASHED_PASSWORD);
 		assertThat(capturedUser.getCreateAt())
