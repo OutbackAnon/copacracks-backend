@@ -39,16 +39,16 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 
 	/** SQL statement for inserting a new user with auto-generated ID. */
 	private static final String INSERT_USER =
-			"INSERT INTO users (username, password_hash, email, created_at) "
+			"INSERT INTO users (username, password, email, created_at) "
 					+ "VALUES (?, ?, ?, ?) RETURNING id";
 
 	/** SQL statement for finding a user by their unique identifier. */
 	private static final String FIND_BY_ID =
-			"SELECT id, username, password_hash, email FROM users WHERE id = ?";
+			"SELECT id, username, password, email FROM users WHERE id = ?";
 
 	/** SQL statement for finding a user by their username. */
 	private static final String FIND_BY_USERNAME =
-			"SELECT id, username, password_hash, email FROM users " + "WHERE username = ?";
+			"SELECT id, username, password, email FROM users " + "WHERE username = ?";
 
 	/** SQL statement for checking if a username exists in the database. */
 	private static final String EXISTS_BY_USERNAME = "SELECT 1 FROM users WHERE username = ? LIMIT 1";
