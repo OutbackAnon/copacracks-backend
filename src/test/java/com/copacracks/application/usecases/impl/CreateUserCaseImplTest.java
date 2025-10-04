@@ -33,11 +33,9 @@ class CreateUserCaseImplTest {
 	private static final String VALID_EMAIL = "john@example.com";
 	private static final String HASHED_PASSWORD = "$2a$10$hashedPasswordExample123";
 
-	@Mock
-    private UserRepository userRepository;
+	@Mock private UserRepository userRepository;
 
-	@Mock
-    private PasswordHasher passwordHasher;
+	@Mock private PasswordHasher passwordHasher;
 
 	private CreateUserCaseImpl createUserCase;
 
