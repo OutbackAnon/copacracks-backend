@@ -1,5 +1,7 @@
 package com.copacracks.domain.exception;
 
+import java.io.Serial;
+
 /**
  * Exception thrown when there are validation problems with the user.
  *
@@ -8,7 +10,7 @@ package com.copacracks.domain.exception;
  * behavior for validation failures.
  */
 public class UserValidationException extends RuntimeException {
-	private static final long serialVersionUID = 1L;
+	@Serial private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a new UserValidationException with the specified detail message.
