@@ -30,7 +30,7 @@ public class MockUserHelper {
 		return UserBuilder.builder()
 				.id(VALID_ID)
 				.username(VALID_USERNAME)
-				.password(VALID_PASSWORD)
+				.password(VALID_HASHED_PASSWORD)
 				.email(VALID_EMAIL)
 				.createdAt(VALID_CREATE_AT);
 	}

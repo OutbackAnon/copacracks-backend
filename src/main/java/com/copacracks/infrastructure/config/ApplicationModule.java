@@ -27,4 +27,10 @@ public class ApplicationModule extends AbstractModule {
 	public DataSource provideDataSource() {
 		return new DatabaseProvider().get();
 	}
+
+    @Provides
+    @Singleton
+    public AppConfig provideAppConfig() {
+        return new AppConfigProvider().get();
+    }
 }

@@ -50,7 +50,11 @@ public record Password(HashedPassword value) {
 	 * @throws UserValidationException if the password does not meet any of the validation
 	 *     requirements
 	 */
-	public Password {}
+	public Password {
+        if (value == null) {
+            throw new UserValidationException("Hashed password cannot be null");
+        }
+    }
 
 	public static Password fromRaw(RawPassword rawPassword, PasswordEncoder encoder, String pepper) {
 		return new Password(new HashedPassword(encoder.encode(rawPassword.value(), pepper)));

@@ -12,6 +12,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.copacracks.application.dto.NewUserDto;
+import com.copacracks.common.helper.MockUserHelper;
 import com.copacracks.domain.exception.UserValidationException;
 import com.copacracks.domain.model.user.User;
 import com.copacracks.domain.repository.UserRepository;
@@ -74,10 +75,12 @@ class CreateUserCaseImplTest {
 	}
 
 	@Test
-	@DisplayName("Deve lançar UserValidationException quando username é inválido")
+	@DisplayName("Deve lançar UserValidationException quando user\"Deve lançar UserValidationException quando username é inválido\")name é inválido")
 	void shouldThrowExceptionWhenUsernameIsInvalid() {
 		// Given
 		final NewUserDto userDto = new NewUserDto("ab", VALID_PASSWORD, VALID_EMAIL);
+
+        when(passwordEncoder.encode(anyString(), anyString())).thenReturn(MockUserHelper.VALID_HASHED_PASSWORD);
 
 		// When & Then
 		assertThatThrownBy(() -> createUserCase.execute(userDto))
@@ -92,6 +95,8 @@ class CreateUserCaseImplTest {
 	void shouldThrowExceptionWhenEmailIsInvalid() {
 		// Given
 		final NewUserDto newUserDto = new NewUserDto(VALID_USERNAME, VALID_PASSWORD, "email-invalido");
+
+        when(passwordEncoder.encode(anyString(), anyString())).thenReturn(MockUserHelper.VALID_HASHED_PASSWORD);
 
 		// When & Then
 		assertThatThrownBy(() -> createUserCase.execute(newUserDto))
@@ -122,6 +127,8 @@ class CreateUserCaseImplTest {
 		// Given
 		final NewUserDto userDto = new NewUserDto(null, VALID_PASSWORD, VALID_EMAIL);
 
+        when(passwordEncoder.encode(anyString(), anyString())).thenReturn(MockUserHelper.VALID_HASHED_PASSWORD);
+
 		// When & Then
 		assertThatThrownBy(() -> createUserCase.execute(userDto))
 				.as("Deve lançar UserValidationException para username nulo")
@@ -135,6 +142,8 @@ class CreateUserCaseImplTest {
 	void shouldThrowExceptionWhenEmailIsNull() {
 		// Given
 		final NewUserDto userDto = new NewUserDto(VALID_USERNAME, VALID_PASSWORD, null);
+
+        when(passwordEncoder.encode(anyString(), anyString())).thenReturn(MockUserHelper.VALID_HASHED_PASSWORD);
 
 		// When & Then
 		assertThatThrownBy(() -> createUserCase.execute(userDto))

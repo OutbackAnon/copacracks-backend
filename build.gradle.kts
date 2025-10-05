@@ -81,6 +81,7 @@ dependencies {
     implementation(libs.postgre)
     implementation(libs.bundles.flyway)
     implementation(libs.password4j)
+    implementation(libs.dotenv)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
