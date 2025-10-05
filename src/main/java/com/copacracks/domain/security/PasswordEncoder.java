@@ -1,4 +1,4 @@
-package com.copacracks.application.security;
+package com.copacracks.domain.security;
 
 /**
  * Interface for password hashing and verification operations.
@@ -21,25 +21,7 @@ package com.copacracks.application.security;
  * <p>Implementations should be thread-safe to support concurrent password operations in
  * multi-threaded environments.
  */
-public interface PasswordHasher {
-
-	/**
-	 * Creates a hash of the provided raw password using an automatically generated salt.
-	 *
-	 * <p>This method generates a cryptographically secure random salt and uses it to hash the
-	 * provided password. The resulting hash typically includes both the salt and algorithm
-	 * parameters, making it self-contained for later verification.
-	 *
-	 * <p>This is the recommended method for most password hashing scenarios as it ensures each
-	 * password gets a unique, randomly generated salt.
-	 *
-	 * @param rawPassword the plain text password to hash, must not be null or empty
-	 * @return the hashed password string, typically including salt and algorithm metadata
-	 * @throws IllegalArgumentException if rawPassword is null or empty
-	 * @throws RuntimeException if the hashing operation fails due to cryptographic errors
-	 */
-	String createHash(String rawPassword);
-
+public interface PasswordEncoder {
 	/**
 	 * Creates a hash of the provided raw password using the specified salt.
 	 *
@@ -51,12 +33,12 @@ public interface PasswordHasher {
 	 * rainbow table attacks.
 	 *
 	 * @param rawPassword the plain text password to hash, must not be null or empty
-	 * @param salt the salt to use for hashing, must not be null or empty
+     * @param pepper the pepper to use for hashing,
 	 * @return the hashed password string using the provided salt
 	 * @throws IllegalArgumentException if rawPassword or salt is null or empty
 	 * @throws RuntimeException if the hashing operation fails due to cryptographic errors
 	 */
-	String createHash(String rawPassword, String salt);
+    String encode(String rawPassword, String pepper);
 
 	/**
 	 * Verifies if a raw password matches the provided hashed password.
@@ -69,11 +51,12 @@ public interface PasswordHasher {
 	 * comparison time is constant regardless of where differences occur in the compared values.
 	 *
 	 * @param rawPassword the plain text password to verify, must not be null
-	 * @param hashedPassword the hashed password to compare against, must not be null
+     * @param hashedPassword the hashed password to compare against, must not be null
+     * @param pepper the hashed password to compare against, must not be null
 	 * @return {@code true} if the raw password matches the hashed password, {@code false} otherwise
 	 * @throws IllegalArgumentException if rawPassword or hashedPassword is null
 	 * @throws RuntimeException if the verification operation fails due to malformed hash data or
 	 *     cryptographic errors
 	 */
-	boolean verify(String rawPassword, String hashedPassword);
+	boolean verify(String rawPassword, String hashedPassword, String pepper);
 }

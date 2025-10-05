@@ -2,6 +2,7 @@ package com.copacracks.domain.model.user;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.copacracks.common.helper.MockUserHelper;
 import com.copacracks.domain.exception.UserValidationException;
 import java.time.Instant;
 import java.util.stream.Stream;
@@ -20,7 +21,7 @@ class UserTest {
 		try {
 			User.verifyPasswordStrength(password);
 
-			new User(username, password, email);
+			new User(username, MockUserHelper.createPassword(password), email);
 			thrown = false;
 		} catch (UserValidationException ex) {
 			thrown = true;
@@ -31,7 +32,7 @@ class UserTest {
 	@Test
 	void shouldCreateValidUser() {
 		// When
-		final User user = new User(USERNAME, PASSWORD, EMAIL);
+		final User user = new User(USERNAME, MockUserHelper.createPassword(PASSWORD), EMAIL);
 
 		// Then
 		assertTrue(
@@ -72,28 +73,24 @@ class UserTest {
 	@Test
 	void shouldChangePassword() {
 		// Given
-		final User user = new User(USERNAME, PASSWORD, EMAIL);
+        final User user = MockUserHelper.createValidUser();
 		final String newPassword = "NewSecurePass456!";
 
 		// When
-		final User updatedUser = user.withNewPassword(newPassword);
+		final User updatedUser = user.withNewPassword(MockUserHelper.createPassword(newPassword));
 
 		// Then
-		assertTrue(
-				updatedUser.isPasswordValid(newPassword)
-						&& !updatedUser.isPasswordValid(PASSWORD)
-						&& !user.isPasswordValid(newPassword)
-						&& user.isPasswordValid(PASSWORD)
-						&& !user.equals(updatedUser)
+		assertTrue(!user.equals(updatedUser)
 						&& user.getUsername().equals(updatedUser.getUsername())
-						&& user.getEmail().equals(updatedUser.getEmail()),
+                        && user.getEmail().equals(updatedUser.getEmail())
+                        && !user.getPassword().equals(updatedUser.getPassword()),
 				"Alterar a senha deve produzir um novo usuário com mesma identidade e credenciais coerentes.");
 	}
 
 	@Test
 	void shouldChangeEmail() {
 		// Given
-		final User user = new User(USERNAME, PASSWORD, EMAIL);
+		final User user = new User(USERNAME, MockUserHelper.createPassword(PASSWORD), EMAIL);
 		final String newEmail = "john.doe@company.com";
 
 		// When
@@ -108,7 +105,7 @@ class UserTest {
 	@Test
 	void shouldChangeUsername() {
 		// Given
-		final User user = new User(USERNAME, PASSWORD, EMAIL);
+		final User user = new User(USERNAME, MockUserHelper.createPassword(PASSWORD), EMAIL);
 		final String newUsername = "jane_doe";
 
 		// When
@@ -126,7 +123,10 @@ class UserTest {
 		final Long id = 1L;
 
 		// When
-		final User user = new User(id, USERNAME, PASSWORD, EMAIL, Instant.now());
+        final User user = MockUserHelper.createUserBuilder()
+                .id(id)
+                .createdAt(Instant.now())
+                .build().createUser();
 
 		// Then
 		assertTrue(

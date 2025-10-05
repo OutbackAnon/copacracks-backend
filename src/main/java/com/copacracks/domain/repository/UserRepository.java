@@ -1,6 +1,8 @@
 package com.copacracks.domain.repository;
 
 import com.copacracks.domain.model.user.User;
+import com.copacracks.infrastructure.persistence.entity.UserEntity;
+
 import java.util.Optional;
 
 /**
@@ -25,7 +27,7 @@ public interface UserRepository {
 	 * @return the saved user entity, potentially with generated fields like ID
 	 * @throws IllegalArgumentException if the user parameter is null
 	 */
-	User save(User user);
+	Long save(User user);
 
 	/**
 	 * Retrieves a user by their unique identifier.
@@ -36,7 +38,7 @@ public interface UserRepository {
 	 * @return an {@link Optional} containing the user if found, or empty if not found
 	 * @throws IllegalArgumentException if the id parameter is null
 	 */
-	Optional<User> findById(Long id);
+	Optional<UserEntity> findById(Long id);
 
 	/**
 	 * Retrieves a user by their username.
@@ -48,7 +50,7 @@ public interface UserRepository {
 	 * @return an {@link Optional} containing the user if found, or empty if not found
 	 * @throws IllegalArgumentException if the username parameter is null or empty
 	 */
-	Optional<User> findByUsername(String username);
+	Optional<UserEntity> findByUsername(String username);
 
 	/**
 	 * Checks if a user with the specified username exists in the repository.

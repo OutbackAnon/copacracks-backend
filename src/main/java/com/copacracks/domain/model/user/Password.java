@@ -1,6 +1,8 @@
 package com.copacracks.domain.model.user;
 
 import com.copacracks.domain.exception.UserValidationException;
+import com.copacracks.domain.security.PasswordEncoder;
+
 import java.util.regex.Pattern;
 
 /**
@@ -22,7 +24,7 @@ import java.util.regex.Pattern;
  *
  * @param value the password string value that has been validated
  */
-public record Password(String value) {
+public record Password(HashedPassword value) {
 
 	/** Minimum required password length. */
 	private static final int MIN_LENGTH = 8;
@@ -51,6 +53,14 @@ public record Password(String value) {
 	 */
 	public Password {}
 
+    public static Password fromRaw(RawPassword rawPassword, PasswordEncoder encoder, String pepper) {
+        return new Password(new HashedPassword(encoder.encode(rawPassword.value(), pepper)));
+    }
+
+    public static Password fromHashed(String encodedValue) {
+        return new Password(new HashedPassword(encodedValue));
+    }
+
 	/**
 	 * Validates a plain text password against all security requirements.
 	 *
@@ -68,6 +78,10 @@ public record Password(String value) {
 		ensureContainsDigit(plainPassword);
 		ensureContainsSpecialChar(plainPassword);
 	}
+
+    public String getHashedPasswordValue() {
+        return value().value();
+    }
 
 	/**
 	 * Ensures the password is not null or empty.

@@ -8,7 +8,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
+import java.sql.Timestamp;
 import java.util.Optional;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +80,7 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 	 * @throws IllegalArgumentException if user is null
 	 */
 	@Override
-	public User save(final User user) {
+	public Long save(final User user) {
 		if (user.isNew()) {
 			return insertUser(user);
 		} else {
@@ -100,7 +100,7 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 	 * @throws IllegalArgumentException if id is null
 	 */
 	@Override
-	public Optional<User> findById(final Long id) {
+	public Optional<UserEntity> findById(final Long id) {
 		return executeSingleResultQuery(
 				FIND_BY_ID, stmt -> stmt.setLong(1, id), this::mapResultSetToUser);
 	}
@@ -117,7 +117,7 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 	 * @throws IllegalArgumentException if username is null or empty
 	 */
 	@Override
-	public Optional<User> findByUsername(final String username) {
+	public Optional<UserEntity> findByUsername(final String username) {
 		return executeSingleResultQuery(
 				FIND_BY_USERNAME, stmt -> stmt.setString(1, username), this::mapResultSetToUser);
 	}
@@ -154,10 +154,10 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 	 * @return a new User instance with the generated database ID
 	 * @throws RuntimeException if a database error occurs during insertion
 	 */
-	private User insertUser(final User user) {
+	private Long insertUser(final User user) {
 		final UserEntity mappedUser = UserMapper.fromModel(user);
-		final Long generateId =
-				executeInsertAndReturnId(
+
+        return executeInsertAndReturnId(
 						INSERT_USER,
 						stmt -> {
 							stmt.setString(1, mappedUser.getUsername());
@@ -165,9 +165,6 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 							stmt.setString(3, mappedUser.getEmail());
 							stmt.setTimestamp(4, mappedUser.getCreatedAt());
 						});
-
-		return new User(
-				generateId, user.getUsername(), user.getPassword(), user.getEmail(), user.getCreateAt());
 	}
 
 	/**
@@ -191,12 +188,12 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 	 * @return a new User instance populated with data from the ResultSet
 	 * @throws SQLException if a database access error occurs or column is missing
 	 */
-	private User mapResultSetToUser(final ResultSet rs) throws SQLException {
-		return new User(
+	private UserEntity mapResultSetToUser(final ResultSet rs) throws SQLException {
+		return new UserEntity(
 				rs.getLong("id"),
 				rs.getString("username"),
 				rs.getString("password"),
 				rs.getString("email"),
-				rs.getObject("created_at", Instant.class));
+				rs.getObject("created_at", Timestamp.class));
 	}
 }

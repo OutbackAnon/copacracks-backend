@@ -38,7 +38,7 @@ public class User {
 	 * @param email the email address string
 	 * @throws UserValidationException if any of the parameters fail validation
 	 */
-	public User(final String username, final String password, final String email) {
+	public User(final String username, final Password password, final String email) {
 		this(null, username, password, email, Instant.now());
 	}
 
@@ -58,12 +58,12 @@ public class User {
 	public User(
 			final Long id,
 			final String username,
-			final String password,
+			final Password password,
 			final String email,
 			final Instant createdAt) {
 		this.id = id;
 		this.username = new Username(username);
-		this.password = new Password(password);
+		this.password = password;
 		this.email = new Email(email);
 		this.createdAt = createdAt;
 	}
@@ -113,26 +113,6 @@ public class User {
 		this.createdAt = createdAt;
 	}
 
-	/**
-	 * Validates if the provided plain text password matches the stored password.
-	 *
-	 * <p>This method safely handles cases where either the provided password or the stored password
-	 * might be null, returning false in such cases.
-	 *
-	 * @param plainPassword the plain text password to validate
-	 * @return {@code true} if the password is valid and matches the stored password, {@code false}
-	 *     otherwise, including when any password is null
-	 */
-	public boolean isPasswordValid(final String plainPassword) {
-		boolean result = false;
-
-		if (plainPassword != null && this.password != null) {
-			result = this.password.value().matches(plainPassword);
-		}
-
-		return result;
-	}
-
 	public static void verifyPasswordStrength(String rawPassword) {
 		Password.validatePlainPassword(rawPassword);
 	}
@@ -147,8 +127,8 @@ public class User {
 	 * @return a new User instance with the updated password
 	 * @throws UserValidationException if the new password fails validation
 	 */
-	public User withNewPassword(final String newPassword) {
-		return new User(this.id, this.username, new Password(newPassword), this.email, this.createdAt);
+	public User withNewPassword(final Password newPassword) {
+		return new User(this.id, this.username, newPassword, this.email, this.createdAt);
 	}
 
 	/**
@@ -228,7 +208,7 @@ public class User {
 	}
 
 	public String getPassword() {
-		return password.value();
+		return password.getHashedPasswordValue();
 	}
 
 	/**
@@ -245,31 +225,45 @@ public class User {
 	 * @param obj the object to compare with
 	 * @return {@code true} if the objects are equal according to the rules above
 	 */
-	@Override
-	public boolean equals(final Object obj) {
-		boolean result = false;
+//	@Override
+//	public boolean equals(final Object obj) {
+//		boolean result = false;
+//
+//		if (this == obj) {
+//			result = true;
+//		} else if (obj != null && getClass() == obj.getClass()) {
+//			final User user = (User) obj;
+//
+//			// If both have IDs, compare only by ID
+//			if (id != null && user.id != null) {
+//				result = Objects.equals(id, user.id);
+//			} else {
+//				// If they don't have IDs, all fields must be equal
+//				result =
+//						Objects.equals(username, user.username)
+//								&& Objects.equals(password.value(), user.password.value())
+//								&& Objects.equals(email, user.email);
+//			}
+//		}
+//
+//		return result;
+//	}
 
-		if (this == obj) {
-			result = true;
-		} else if (obj != null && getClass() == obj.getClass()) {
-			final User user = (User) obj;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(createdAt, user.createdAt);
+    }
 
-			// If both have IDs, compare only by ID
-			if (id != null && user.id != null) {
-				result = Objects.equals(id, user.id);
-			} else {
-				// If they don't have IDs, all fields must be equal
-				result =
-						Objects.equals(username, user.username)
-								&& Objects.equals(password, user.password)
-								&& Objects.equals(email, user.email);
-			}
-		}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, email, createdAt);
+    }
 
-		return result;
-	}
 
-	/**
+    /**
 	 * Returns a hash code for this user.
 	 *
 	 * <p>The hash code is calculated based on:
@@ -281,18 +275,18 @@ public class User {
 	 *
 	 * @return the hash code value
 	 */
-	@Override
-	public int hashCode() {
-		final int result;
-
-		if (id != null) {
-			result = Objects.hash(id);
-		} else {
-			result = Objects.hash(username, password, email);
-		}
-
-		return result;
-	}
+//	@Override
+//	public int hashCode() {
+//		final int result;
+//
+//		if (id != null) {
+//			result = Objects.hash(id);
+//		} else {
+//			result = Objects.hash(username, password, email);
+//		}
+//
+//		return result;
+//	}
 
 	/**
 	 * Returns a string representation of this user.
@@ -305,7 +299,7 @@ public class User {
 	@Override
 	public String toString() {
 		return String.format(
-				"User{id=%s, username='%s', email='%s', createdAt=''%s}",
-				id, username.value(), email.value(), createdAt.toString());
+				"User{id=%s, username='%s', password='%s' email='%s', createdAt=''%s}",
+				id, username.value(), password.getHashedPasswordValue(), email.value(), createdAt.toString());
 	}
 }

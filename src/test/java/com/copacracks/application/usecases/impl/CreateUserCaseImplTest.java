@@ -12,7 +12,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.copacracks.application.dto.NewUserDto;
-import com.copacracks.application.security.PasswordHasher;
+import com.copacracks.domain.security.PasswordEncoder;
 import com.copacracks.domain.exception.UserValidationException;
 import com.copacracks.domain.model.user.User;
 import com.copacracks.domain.repository.UserRepository;
@@ -29,19 +29,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class CreateUserCaseImplTest {
 
 	private static final String VALID_USERNAME = "john_doe";
-	private static final String VALID_PASSWORD = "SecurePass123!";
+    private static final String VALID_PASSWORD = "SecurePass123!";
+    private static final String SECURITY_PEPPER = "security_pepper";
 	private static final String VALID_EMAIL = "john@example.com";
 	private static final String HASHED_PASSWORD = "$2a$10$hashedPasswordExample123";
 
-	@Mock private UserRepository userRepository;
+	@Mock
+    private UserRepository userRepository;
 
-	@Mock private PasswordHasher passwordHasher;
+	@Mock
+    private PasswordEncoder passwordEncoder;
 
 	private CreateUserCaseImpl createUserCase;
 
 	@BeforeEach
 	void setUp() {
-		createUserCase = new CreateUserCaseImpl(userRepository, passwordHasher);
+		createUserCase = new CreateUserCaseImpl(userRepository, passwordEncoder);
 	}
 
 	@Test
@@ -50,14 +53,14 @@ class CreateUserCaseImplTest {
 		// Given
 		final NewUserDto requestDto = new NewUserDto(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL);
 
-		when(passwordHasher.createHash(VALID_PASSWORD)).thenReturn(HASHED_PASSWORD);
+		when(passwordEncoder.encode(VALID_PASSWORD, SECURITY_PEPPER)).thenReturn(HASHED_PASSWORD);
 
 		// When
 		createUserCase.execute(requestDto);
 
 		// Then
 		final ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-		verify(passwordHasher, times(1)).createHash(VALID_PASSWORD);
+		verify(passwordEncoder, times(1)).encode(VALID_PASSWORD, SECURITY_PEPPER);
 		verify(userRepository, times(1)).save(userCaptor.capture());
 
 		final User capturedUser = userCaptor.getValue();
@@ -111,7 +114,7 @@ class CreateUserCaseImplTest {
 				.as("Deve lançar UserValidationException para password inválido")
 				.isInstanceOf(UserValidationException.class);
 
-		verify(passwordHasher, never()).createHash(anyString());
+		verify(passwordEncoder, never()).encode(anyString(), anyString());
 		verify(userRepository, never()).save(any(User.class));
 	}
 
@@ -154,7 +157,7 @@ class CreateUserCaseImplTest {
 				.as("Deve lançar UserValidationException para password nulo")
 				.isInstanceOf(UserValidationException.class);
 
-		verify(passwordHasher, never()).createHash(anyString());
+		verify(passwordEncoder, never()).encode(anyString(), anyString());
 		verify(userRepository, never()).save(any(User.class));
 	}
 
@@ -165,7 +168,7 @@ class CreateUserCaseImplTest {
 		final NewUserDto userDto = new NewUserDto(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL);
 
 		final RuntimeException hashingException = new RuntimeException("Erro no hash da senha");
-		when(passwordHasher.createHash(VALID_PASSWORD)).thenThrow(hashingException);
+		when(passwordEncoder.encode(VALID_PASSWORD, SECURITY_PEPPER)).thenThrow(hashingException);
 
 		// When & Then
 		assertThatThrownBy(() -> createUserCase.execute(userDto))
@@ -173,7 +176,7 @@ class CreateUserCaseImplTest {
 				.isInstanceOf(RuntimeException.class)
 				.hasMessage("Erro no hash da senha");
 
-		verify(passwordHasher, times(1)).createHash(VALID_PASSWORD);
+		verify(passwordEncoder, times(1)).encode(VALID_PASSWORD, SECURITY_PEPPER);
 		verify(userRepository, never()).save(any(User.class));
 	}
 
@@ -183,7 +186,7 @@ class CreateUserCaseImplTest {
 		// Given
 		final NewUserDto userDto = new NewUserDto(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL);
 
-		when(passwordHasher.createHash(VALID_PASSWORD)).thenReturn(HASHED_PASSWORD);
+		when(passwordEncoder.encode(VALID_PASSWORD, SECURITY_PEPPER)).thenReturn(HASHED_PASSWORD);
 		final RuntimeException repositoryException = new RuntimeException("Erro no repositório");
 		doThrow(repositoryException).when(userRepository).save(any(User.class));
 
@@ -193,7 +196,7 @@ class CreateUserCaseImplTest {
 				.isInstanceOf(RuntimeException.class)
 				.hasMessage("Erro no repositório");
 
-		verify(passwordHasher, times(1)).createHash(VALID_PASSWORD);
+		verify(passwordEncoder, times(1)).encode(VALID_PASSWORD, SECURITY_PEPPER);
 		verify(userRepository, times(1)).save(any(User.class));
 	}
 
@@ -207,7 +210,7 @@ class CreateUserCaseImplTest {
 
 		final NewUserDto userDto = new NewUserDto(minimalUsername, minimalPassword, minimalEmail);
 
-		when(passwordHasher.createHash(minimalPassword)).thenReturn(HASHED_PASSWORD);
+		when(passwordEncoder.encode(minimalPassword, SECURITY_PEPPER)).thenReturn(HASHED_PASSWORD);
 
 		// When
 		createUserCase.execute(userDto);
@@ -224,17 +227,17 @@ class CreateUserCaseImplTest {
 
 	@Test
 	@DisplayName("Deve verificar se hash da senha é chamado com a senha correta")
-	void shouldCallPasswordHasherWithCorrectPassword() {
+	void shouldCallPasswordEncoderWithCorrectPassword() {
 		// Given
 		final NewUserDto userDto = new NewUserDto(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL);
 
-		when(passwordHasher.createHash(VALID_PASSWORD)).thenReturn(HASHED_PASSWORD);
+		when(passwordEncoder.encode(VALID_PASSWORD, SECURITY_PEPPER)).thenReturn(HASHED_PASSWORD);
 
 		// When
 		createUserCase.execute(userDto);
 
 		// Then
-		verify(passwordHasher, times(1)).createHash(eq(VALID_PASSWORD));
+		verify(passwordEncoder, times(1)).encode(eq(VALID_PASSWORD), eq(SECURITY_PEPPER));
 	}
 
 	@Test
@@ -247,7 +250,7 @@ class CreateUserCaseImplTest {
 
 		final NewUserDto userDto = new NewUserDto(specificUsername, specificPassword, specificEmail);
 
-		when(passwordHasher.createHash(specificPassword)).thenReturn(HASHED_PASSWORD);
+		when(passwordEncoder.encode(specificPassword, SECURITY_PEPPER)).thenReturn(HASHED_PASSWORD);
 
 		// When
 		createUserCase.execute(userDto);
