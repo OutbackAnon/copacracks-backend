@@ -51,10 +51,10 @@ public record Password(HashedPassword value) {
 	 *     requirements
 	 */
 	public Password {
-        if (value == null) {
-            throw new UserValidationException("Hashed password cannot be null");
-        }
-    }
+		if (value == null) {
+			throw new UserValidationException("Hashed password cannot be null");
+		}
+	}
 
 	public static Password fromRaw(RawPassword rawPassword, PasswordEncoder encoder, String pepper) {
 		return new Password(new HashedPassword(encoder.encode(rawPassword.value(), pepper)));

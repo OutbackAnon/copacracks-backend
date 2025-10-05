@@ -28,9 +28,9 @@ public class ApplicationModule extends AbstractModule {
 		return new DatabaseProvider().get();
 	}
 
-    @Provides
-    @Singleton
-    public AppConfig provideAppConfig() {
-        return new AppConfigProvider().get();
-    }
+	@Provides
+	@Singleton
+	public AppConfig provideAppConfig() {
+		return new AppConfigProvider().get();
+	}
 }

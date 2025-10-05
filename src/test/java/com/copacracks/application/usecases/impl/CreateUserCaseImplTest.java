@@ -75,12 +75,14 @@ class CreateUserCaseImplTest {
 	}
 
 	@Test
-	@DisplayName("Deve lançar UserValidationException quando user\"Deve lançar UserValidationException quando username é inválido\")name é inválido")
+	@DisplayName(
+			"Deve lançar UserValidationException quando user\"Deve lançar UserValidationException quando username é inválido\")name é inválido")
 	void shouldThrowExceptionWhenUsernameIsInvalid() {
 		// Given
 		final NewUserDto userDto = new NewUserDto("ab", VALID_PASSWORD, VALID_EMAIL);
 
-        when(passwordEncoder.encode(anyString(), anyString())).thenReturn(MockUserHelper.VALID_HASHED_PASSWORD);
+		when(passwordEncoder.encode(anyString(), anyString()))
+				.thenReturn(MockUserHelper.VALID_HASHED_PASSWORD);
 
 		// When & Then
 		assertThatThrownBy(() -> createUserCase.execute(userDto))
@@ -96,7 +98,8 @@ class CreateUserCaseImplTest {
 		// Given
 		final NewUserDto newUserDto = new NewUserDto(VALID_USERNAME, VALID_PASSWORD, "email-invalido");
 
-        when(passwordEncoder.encode(anyString(), anyString())).thenReturn(MockUserHelper.VALID_HASHED_PASSWORD);
+		when(passwordEncoder.encode(anyString(), anyString()))
+				.thenReturn(MockUserHelper.VALID_HASHED_PASSWORD);
 
 		// When & Then
 		assertThatThrownBy(() -> createUserCase.execute(newUserDto))
@@ -127,7 +130,8 @@ class CreateUserCaseImplTest {
 		// Given
 		final NewUserDto userDto = new NewUserDto(null, VALID_PASSWORD, VALID_EMAIL);
 
-        when(passwordEncoder.encode(anyString(), anyString())).thenReturn(MockUserHelper.VALID_HASHED_PASSWORD);
+		when(passwordEncoder.encode(anyString(), anyString()))
+				.thenReturn(MockUserHelper.VALID_HASHED_PASSWORD);
 
 		// When & Then
 		assertThatThrownBy(() -> createUserCase.execute(userDto))
@@ -143,7 +147,8 @@ class CreateUserCaseImplTest {
 		// Given
 		final NewUserDto userDto = new NewUserDto(VALID_USERNAME, VALID_PASSWORD, null);
 
-        when(passwordEncoder.encode(anyString(), anyString())).thenReturn(MockUserHelper.VALID_HASHED_PASSWORD);
+		when(passwordEncoder.encode(anyString(), anyString()))
+				.thenReturn(MockUserHelper.VALID_HASHED_PASSWORD);
 
 		// When & Then
 		assertThatThrownBy(() -> createUserCase.execute(userDto))
