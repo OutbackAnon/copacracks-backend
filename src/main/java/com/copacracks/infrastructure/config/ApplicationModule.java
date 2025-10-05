@@ -1,9 +1,9 @@
 package com.copacracks.infrastructure.config;
 
-import com.copacracks.domain.security.PasswordEncoder;
 import com.copacracks.application.usecases.CreateUserCase;
 import com.copacracks.application.usecases.impl.CreateUserCaseImpl;
 import com.copacracks.domain.repository.UserRepository;
+import com.copacracks.domain.security.PasswordEncoder;
 import com.copacracks.infrastructure.persistence.repository.JdbcUserRepository;
 import com.copacracks.infrastructure.security.PasswordEncoderImpl;
 import com.google.inject.AbstractModule;

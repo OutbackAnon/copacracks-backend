@@ -33,12 +33,12 @@ public interface PasswordEncoder {
 	 * rainbow table attacks.
 	 *
 	 * @param rawPassword the plain text password to hash, must not be null or empty
-     * @param pepper the pepper to use for hashing,
+	 * @param pepper the pepper to use for hashing,
 	 * @return the hashed password string using the provided salt
 	 * @throws IllegalArgumentException if rawPassword or salt is null or empty
 	 * @throws RuntimeException if the hashing operation fails due to cryptographic errors
 	 */
-    String encode(String rawPassword, String pepper);
+	String encode(String rawPassword, String pepper);
 
 	/**
 	 * Verifies if a raw password matches the provided hashed password.
@@ -51,8 +51,8 @@ public interface PasswordEncoder {
 	 * comparison time is constant regardless of where differences occur in the compared values.
 	 *
 	 * @param rawPassword the plain text password to verify, must not be null
-     * @param hashedPassword the hashed password to compare against, must not be null
-     * @param pepper the hashed password to compare against, must not be null
+	 * @param hashedPassword the hashed password to compare against, must not be null
+	 * @param pepper the hashed password to compare against, must not be null
 	 * @return {@code true} if the raw password matches the hashed password, {@code false} otherwise
 	 * @throws IllegalArgumentException if rawPassword or hashedPassword is null
 	 * @throws RuntimeException if the verification operation fails due to malformed hash data or

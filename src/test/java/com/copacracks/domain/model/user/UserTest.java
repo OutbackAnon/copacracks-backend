@@ -73,17 +73,18 @@ class UserTest {
 	@Test
 	void shouldChangePassword() {
 		// Given
-        final User user = MockUserHelper.createValidUser();
+		final User user = MockUserHelper.createValidUser();
 		final String newPassword = "NewSecurePass456!";
 
 		// When
 		final User updatedUser = user.withNewPassword(MockUserHelper.createPassword(newPassword));
 
 		// Then
-		assertTrue(!user.equals(updatedUser)
+		assertTrue(
+				!user.equals(updatedUser)
 						&& user.getUsername().equals(updatedUser.getUsername())
-                        && user.getEmail().equals(updatedUser.getEmail())
-                        && !user.getPassword().equals(updatedUser.getPassword()),
+						&& user.getEmail().equals(updatedUser.getEmail())
+						&& !user.getPassword().equals(updatedUser.getPassword()),
 				"Alterar a senha deve produzir um novo usuário com mesma identidade e credenciais coerentes.");
 	}
 
@@ -123,10 +124,8 @@ class UserTest {
 		final Long id = 1L;
 
 		// When
-        final User user = MockUserHelper.createUserBuilder()
-                .id(id)
-                .createdAt(Instant.now())
-                .build().createUser();
+		final User user =
+				MockUserHelper.createUserBuilder().id(id).createdAt(Instant.now()).build().createUser();
 
 		// Then
 		assertTrue(

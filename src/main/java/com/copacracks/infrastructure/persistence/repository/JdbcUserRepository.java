@@ -157,14 +157,14 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 	private Long insertUser(final User user) {
 		final UserEntity mappedUser = UserMapper.fromModel(user);
 
-        return executeInsertAndReturnId(
-						INSERT_USER,
-						stmt -> {
-							stmt.setString(1, mappedUser.getUsername());
-							stmt.setString(2, mappedUser.getPassword());
-							stmt.setString(3, mappedUser.getEmail());
-							stmt.setTimestamp(4, mappedUser.getCreatedAt());
-						});
+		return executeInsertAndReturnId(
+				INSERT_USER,
+				stmt -> {
+					stmt.setString(1, mappedUser.getUsername());
+					stmt.setString(2, mappedUser.getPassword());
+					stmt.setString(3, mappedUser.getEmail());
+					stmt.setTimestamp(4, mappedUser.getCreatedAt());
+				});
 	}
 
 	/**

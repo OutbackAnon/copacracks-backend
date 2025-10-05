@@ -2,7 +2,6 @@ package com.copacracks.domain.repository;
 
 import com.copacracks.domain.model.user.User;
 import com.copacracks.infrastructure.persistence.entity.UserEntity;
-
 import java.util.Optional;
 
 /**

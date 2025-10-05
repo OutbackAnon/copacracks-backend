@@ -225,45 +225,48 @@ public class User {
 	 * @param obj the object to compare with
 	 * @return {@code true} if the objects are equal according to the rules above
 	 */
-//	@Override
-//	public boolean equals(final Object obj) {
-//		boolean result = false;
-//
-//		if (this == obj) {
-//			result = true;
-//		} else if (obj != null && getClass() == obj.getClass()) {
-//			final User user = (User) obj;
-//
-//			// If both have IDs, compare only by ID
-//			if (id != null && user.id != null) {
-//				result = Objects.equals(id, user.id);
-//			} else {
-//				// If they don't have IDs, all fields must be equal
-//				result =
-//						Objects.equals(username, user.username)
-//								&& Objects.equals(password.value(), user.password.value())
-//								&& Objects.equals(email, user.email);
-//			}
-//		}
-//
-//		return result;
-//	}
+	//	@Override
+	//	public boolean equals(final Object obj) {
+	//		boolean result = false;
+	//
+	//		if (this == obj) {
+	//			result = true;
+	//		} else if (obj != null && getClass() == obj.getClass()) {
+	//			final User user = (User) obj;
+	//
+	//			// If both have IDs, compare only by ID
+	//			if (id != null && user.id != null) {
+	//				result = Objects.equals(id, user.id);
+	//			} else {
+	//				// If they don't have IDs, all fields must be equal
+	//				result =
+	//						Objects.equals(username, user.username)
+	//								&& Objects.equals(password.value(), user.password.value())
+	//								&& Objects.equals(email, user.email);
+	//			}
+	//		}
+	//
+	//		return result;
+	//	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(createdAt, user.createdAt);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		User user = (User) o;
+		return Objects.equals(id, user.id)
+				&& Objects.equals(username, user.username)
+				&& Objects.equals(password, user.password)
+				&& Objects.equals(email, user.email)
+				&& Objects.equals(createdAt, user.createdAt);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, username, password, email, createdAt);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, username, password, email, createdAt);
+	}
 
-
-    /**
+	/**
 	 * Returns a hash code for this user.
 	 *
 	 * <p>The hash code is calculated based on:
@@ -275,18 +278,18 @@ public class User {
 	 *
 	 * @return the hash code value
 	 */
-//	@Override
-//	public int hashCode() {
-//		final int result;
-//
-//		if (id != null) {
-//			result = Objects.hash(id);
-//		} else {
-//			result = Objects.hash(username, password, email);
-//		}
-//
-//		return result;
-//	}
+	//	@Override
+	//	public int hashCode() {
+	//		final int result;
+	//
+	//		if (id != null) {
+	//			result = Objects.hash(id);
+	//		} else {
+	//			result = Objects.hash(username, password, email);
+	//		}
+	//
+	//		return result;
+	//	}
 
 	/**
 	 * Returns a string representation of this user.
@@ -300,6 +303,10 @@ public class User {
 	public String toString() {
 		return String.format(
 				"User{id=%s, username='%s', password='%s' email='%s', createdAt=''%s}",
-				id, username.value(), password.getHashedPasswordValue(), email.value(), createdAt.toString());
+				id,
+				username.value(),
+				password.getHashedPasswordValue(),
+				email.value(),
+				createdAt.toString());
 	}
 }

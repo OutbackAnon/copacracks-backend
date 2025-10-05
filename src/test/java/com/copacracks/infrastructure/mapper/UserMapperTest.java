@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
-import org.mockito.Mock;
 
 @DisplayName("UserMapper Tests")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
@@ -227,9 +226,9 @@ public class UserMapperTest {
 			assertThat(secondRoundTrip.getCreateAt()).isEqualTo(firstRoundTrip.getCreateAt());
 		}
 
-//		private User createOriginalUser() {
-//			return new User(VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, VALID_CREATE_AT);
-//		}
+		//		private User createOriginalUser() {
+		//			return new User(VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, VALID_CREATE_AT);
+		//		}
 	}
 
 	@Nested
@@ -280,11 +279,12 @@ public class UserMapperTest {
 			String maxUsername = "a".repeat(50); // Maximum allowed length
 			String validLongEmail = "test" + "a".repeat(60) + "@example.com"; // Valid but long email
 
-            User user = MockUserHelper.createUserBuilder()
-                    .username(maxUsername)
-                    .email(validLongEmail)
-                    .build()
-                    .createUser();
+			User user =
+					MockUserHelper.createUserBuilder()
+							.username(maxUsername)
+							.email(validLongEmail)
+							.build()
+							.createUser();
 
 			// When
 			UserEntity entity = UserMapper.fromModel(user);
@@ -301,10 +301,12 @@ public class UserMapperTest {
 			// Given - Username with underscore (valid), Email with plus and hyphen (valid)
 			String validUsername = "user_name123";
 			String validEmail = "test+special@domain-name.co.uk";
-            User user = MockUserHelper.createUserBuilder()
-                    .username(validUsername)
-                    .email(validEmail)
-                    .build().createUser();
+			User user =
+					MockUserHelper.createUserBuilder()
+							.username(validUsername)
+							.email(validEmail)
+							.build()
+							.createUser();
 
 			// When
 			UserEntity entity = UserMapper.fromModel(user);
@@ -322,10 +324,12 @@ public class UserMapperTest {
 			String mixedCaseUsername = "User123_Test";
 			String mixedCaseEmail = "Test.User123@Example.Com";
 
-            User user = MockUserHelper.createUserBuilder()
-                    .username(mixedCaseUsername)
-                    .email(mixedCaseEmail)
-                    .build().createUser();
+			User user =
+					MockUserHelper.createUserBuilder()
+							.username(mixedCaseUsername)
+							.email(mixedCaseEmail)
+							.build()
+							.createUser();
 
 			// When
 			UserEntity entity = UserMapper.fromModel(user);

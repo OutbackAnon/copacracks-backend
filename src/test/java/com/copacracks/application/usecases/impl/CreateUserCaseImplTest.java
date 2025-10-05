@@ -12,10 +12,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.copacracks.application.dto.NewUserDto;
-import com.copacracks.domain.security.PasswordEncoder;
 import com.copacracks.domain.exception.UserValidationException;
 import com.copacracks.domain.model.user.User;
 import com.copacracks.domain.repository.UserRepository;
+import com.copacracks.domain.security.PasswordEncoder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,16 +29,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class CreateUserCaseImplTest {
 
 	private static final String VALID_USERNAME = "john_doe";
-    private static final String VALID_PASSWORD = "SecurePass123!";
-    private static final String SECURITY_PEPPER = "security_pepper";
+	private static final String VALID_PASSWORD = "SecurePass123!";
+	private static final String SECURITY_PEPPER = "security_pepper";
 	private static final String VALID_EMAIL = "john@example.com";
 	private static final String HASHED_PASSWORD = "$2a$10$hashedPasswordExample123";
 
-	@Mock
-    private UserRepository userRepository;
+	@Mock private UserRepository userRepository;
 
-	@Mock
-    private PasswordEncoder passwordEncoder;
+	@Mock private PasswordEncoder passwordEncoder;
 
 	private CreateUserCaseImpl createUserCase;
 
