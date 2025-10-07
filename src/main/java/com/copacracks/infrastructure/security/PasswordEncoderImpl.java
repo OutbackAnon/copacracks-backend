@@ -6,15 +6,8 @@ import com.google.inject.Inject;
 import com.password4j.Password;
 
 public class PasswordEncoderImpl implements PasswordEncoder {
-	private final String securityPepper;
-
-	@Inject
-	public PasswordEncoderImpl(AppConfig config) {
-		this.securityPepper = config.securityPepper();
-	}
-
 	@Override
-	public String encode(String rawPassword, String pepper) {
+	public String encode(String rawPassword, String securityPepper) {
 		return Password.hash(rawPassword)
 				.addRandomSalt(32)
 				.addPepper(securityPepper)
@@ -23,7 +16,7 @@ public class PasswordEncoderImpl implements PasswordEncoder {
 	}
 
 	@Override
-	public boolean verify(String rawPassword, String hashedPassword, String pepper) {
+	public boolean verify(String rawPassword, String hashedPassword, String securityPepper) {
 		return Password.check(rawPassword, hashedPassword).addPepper(securityPepper).withArgon2();
 	}
 }

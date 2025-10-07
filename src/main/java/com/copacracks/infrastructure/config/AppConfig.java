@@ -4,16 +4,18 @@ import io.github.cdimascio.dotenv.Dotenv;
 import lombok.Builder;
 
 @Builder
-public record AppConfig(String securityPepper, String appEnv) {
+public record AppConfig(Env env) {
 	public boolean isProduction() {
-		return "prod".equalsIgnoreCase(appEnv);
+		return "prod".equalsIgnoreCase(env.appEnv());
 	}
 
 	public boolean isDevelopment() {
-		return "local".equalsIgnoreCase(appEnv);
+		return "local".equalsIgnoreCase(env.appEnv());
 	}
 
-	private static Dotenv getDotenv() {
-		return Dotenv.configure().ignoreIfMissing().ignoreIfMalformed().load();
-	}
+    @Builder
+    public record Env(
+            String securityPepper,
+            String appEnv
+    ) {}
 }

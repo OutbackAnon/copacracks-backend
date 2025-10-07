@@ -18,7 +18,7 @@ public class PasswordEncoderImplTest {
 		final String SECURITY_PEPPER = "security_pepper";
 
 		// When
-		PasswordEncoderImpl encoder = new PasswordEncoderImpl(MockAppConfigHelper.createAppConfig());
+		PasswordEncoderImpl encoder = new PasswordEncoderImpl();
 
 		final String hash = encoder.encode(plainPassword, SECURITY_PEPPER);
 		final boolean verifyPw = encoder.verify(plainPassword, hash, SECURITY_PEPPER);

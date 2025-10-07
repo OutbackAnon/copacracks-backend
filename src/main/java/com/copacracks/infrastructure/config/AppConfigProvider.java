@@ -8,10 +8,12 @@ public class AppConfigProvider implements Provider<AppConfig> {
 
 	@Override
 	public AppConfig get() {
-		return AppConfig.builder()
-				.appEnv(dotenv.get("APP_ENV", "local"))
-				.securityPepper(dotenv.get("SECURITY_PAPER", "security_pepper"))
-				.build();
+        return AppConfig.builder()
+                .env(AppConfig.Env.builder()
+                        .appEnv(dotenv.get("APP_ENV", "local"))
+                        .securityPepper(dotenv.get("SECURITY_PAPER", "security_pepper"))
+                        .build())
+                .build();
 	}
 
 	private static Dotenv getDotenv() {

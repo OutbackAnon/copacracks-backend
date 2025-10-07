@@ -12,6 +12,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.copacracks.application.dto.NewUserDto;
+import com.copacracks.common.helper.MockAppConfigHelper;
 import com.copacracks.common.helper.MockUserHelper;
 import com.copacracks.domain.exception.UserValidationException;
 import com.copacracks.domain.model.user.User;
@@ -43,7 +44,7 @@ class CreateUserCaseImplTest {
 
 	@BeforeEach
 	void setUp() {
-		createUserCase = new CreateUserCaseImpl(userRepository, passwordEncoder);
+		createUserCase = new CreateUserCaseImpl(userRepository, passwordEncoder, MockAppConfigHelper.createAppConfig());
 	}
 
 	@Test
