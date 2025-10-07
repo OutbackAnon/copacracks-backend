@@ -13,21 +13,23 @@ import com.google.inject.Inject;
 public class CreateUserCaseImpl implements CreateUserCase {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-    private final AppConfig appConfig;
+	private final AppConfig appConfig;
 
 	@Inject
 	public CreateUserCaseImpl(
-			final UserRepository userRepository, final PasswordEncoder passwordEncoder, final AppConfig appConfig) {
+			final UserRepository userRepository,
+			final PasswordEncoder passwordEncoder,
+			final AppConfig appConfig) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
-        this.appConfig = appConfig;
+		this.appConfig = appConfig;
 	}
 
 	@Override
 	public void execute(final NewUserDto userDto) {
 		User.verifyPasswordStrength(userDto.rawPassword());
 
-        final String securityPepper = appConfig.env().securityPepper();
+		final String securityPepper = appConfig.env().securityPepper();
 
 		final RawPassword rawPassword = new RawPassword(userDto.rawPassword());
 		final Password password = Password.fromRaw(rawPassword, passwordEncoder, securityPepper);

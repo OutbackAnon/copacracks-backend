@@ -2,7 +2,6 @@ package com.copacracks.infrastructure.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.copacracks.common.helper.MockAppConfigHelper;
 import com.copacracks.common.helper.MockUserHelper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

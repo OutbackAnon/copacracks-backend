@@ -1,8 +1,6 @@
 package com.copacracks.infrastructure.security;
 
 import com.copacracks.domain.security.PasswordEncoder;
-import com.copacracks.infrastructure.config.AppConfig;
-import com.google.inject.Inject;
 import com.password4j.Password;
 
 public class PasswordEncoderImpl implements PasswordEncoder {

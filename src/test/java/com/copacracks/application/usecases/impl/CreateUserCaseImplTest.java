@@ -44,7 +44,9 @@ class CreateUserCaseImplTest {
 
 	@BeforeEach
 	void setUp() {
-		createUserCase = new CreateUserCaseImpl(userRepository, passwordEncoder, MockAppConfigHelper.createAppConfig());
+		createUserCase =
+				new CreateUserCaseImpl(
+						userRepository, passwordEncoder, MockAppConfigHelper.createAppConfig());
 	}
 
 	@Test

@@ -1,6 +1,5 @@
 package com.copacracks.infrastructure.config;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import lombok.Builder;
 
 @Builder
@@ -13,9 +12,6 @@ public record AppConfig(Env env) {
 		return "local".equalsIgnoreCase(env.appEnv());
 	}
 
-    @Builder
-    public record Env(
-            String securityPepper,
-            String appEnv
-    ) {}
+	@Builder
+	public record Env(String securityPepper, String appEnv) {}
 }
