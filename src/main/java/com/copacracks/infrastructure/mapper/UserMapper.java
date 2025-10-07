@@ -1,5 +1,7 @@
 package com.copacracks.infrastructure.mapper;
 
+import com.copacracks.domain.model.user.HashedPassword;
+import com.copacracks.domain.model.user.Password;
 import com.copacracks.domain.model.user.User;
 import com.copacracks.infrastructure.persistence.entity.UserEntity;
 import java.sql.Timestamp;
@@ -88,7 +90,7 @@ public final class UserMapper {
 		return new User(
 				userEntity.getId(),
 				userEntity.getUsername(),
-				userEntity.getPassword(),
+				new Password(new HashedPassword(userEntity.getPassword())),
 				userEntity.getEmail(),
 				createdAtInstant);
 	}

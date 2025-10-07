@@ -3,6 +3,7 @@ package com.copacracks.infrastructure.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.copacracks.common.helper.MockUserHelper;
 import com.copacracks.domain.model.user.User;
 import com.copacracks.infrastructure.persistence.entity.UserEntity;
 import java.lang.reflect.Constructor;
@@ -19,13 +20,6 @@ import org.junit.jupiter.params.provider.NullSource;
 @DisplayName("UserMapper Tests")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class UserMapperTest {
-	private static final String VALID_USERNAME = "testuser";
-	private static final String VALID_EMAIL = "test@example.com";
-	private static final String VALID_PASSWORD = "ValidPass123!";
-	private static final String VALID_HASHED_PASSWORD = "$2a$10$hashedPassword";
-	private static final Long VALID_ID = 1L;
-	private static final Instant VALID_CREATE_AT = Instant.now();
-
 	@Nested
 	@DisplayName("fromModel() Tests")
 	public class FromModelTests {
@@ -34,17 +28,17 @@ public class UserMapperTest {
 		@DisplayName("Should successfully convert User to UserEntity")
 		public void shouldConvertUserToUserEntity() {
 			// Given
-			User user = createValidUser();
+			User user = MockUserHelper.createValidUser();
 
 			// When
 			UserEntity result = UserMapper.fromModel(user);
 
 			// Then
 			assertThat(result).isNotNull();
-			assertThat(result.getUsername()).isEqualTo(VALID_USERNAME);
-			assertThat(result.getEmail()).isEqualTo(VALID_EMAIL);
-			assertThat(result.getPassword()).isEqualTo(VALID_PASSWORD);
-			assertThat(result.getCreatedAt()).isEqualTo(Timestamp.from(VALID_CREATE_AT));
+			assertThat(result.getUsername()).isEqualTo(MockUserHelper.VALID_USERNAME);
+			assertThat(result.getEmail()).isEqualTo(MockUserHelper.VALID_EMAIL);
+			assertThat(result.getPassword()).isEqualTo(MockUserHelper.VALID_HASHED_PASSWORD);
+			assertThat(result.getCreatedAt()).isEqualTo(Timestamp.from(MockUserHelper.VALID_CREATE_AT));
 			// ID should not be mapped in fromModel (handled by persistence layer)
 			assertThat(result.getId()).isNull();
 		}
@@ -54,7 +48,7 @@ public class UserMapperTest {
 		public void shouldPreserveTimestampPrecision() {
 			// Given
 			Instant preciseInstant = Instant.parse("2023-12-25T10:30:45.123456789Z");
-			User user = createUserWithCreatedAt(preciseInstant);
+			User user = MockUserHelper.createUserWithCreatedAt(preciseInstant);
 
 			// When
 			UserEntity userEntity = UserMapper.fromModel(user);
@@ -68,7 +62,7 @@ public class UserMapperTest {
 		public void shouldHandleEdgeCaseTimestamps() {
 			// Given - Test with epoch time
 			Instant epochTime = Instant.EPOCH;
-			User user = createUserWithCreatedAt(epochTime);
+			User user = MockUserHelper.createUserWithCreatedAt(epochTime);
 
 			// When
 			UserEntity result = UserMapper.fromModel(user);
@@ -89,22 +83,10 @@ public class UserMapperTest {
 		@DisplayName("Should throw NullPointerException when createAt is null")
 		public void shouldThrowExceptionWhenCreateAtIsNull() {
 			// Given
-			User user = createUserWithNullCreatedAt();
+			User user = MockUserHelper.createUserWithNullCreatedAt();
 
 			// When & Then
 			assertThatThrownBy(() -> UserMapper.fromModel(user)).isInstanceOf(NullPointerException.class);
-		}
-
-		private User createValidUser() {
-			return new User(VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, VALID_CREATE_AT);
-		}
-
-		private User createUserWithCreatedAt(Instant createdAt) {
-			return new User(VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, createdAt);
-		}
-
-		private User createUserWithNullCreatedAt() {
-			return new User(VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, null);
 		}
 	}
 
@@ -123,10 +105,10 @@ public class UserMapperTest {
 
 			// Then
 			assertThat(result).isNotNull();
-			assertThat(result.getId()).isEqualTo(VALID_ID);
-			assertThat(result.getUsername()).isEqualTo(VALID_USERNAME);
-			assertThat(result.getEmail()).isEqualTo(VALID_EMAIL);
-			assertThat(result.getCreateAt()).isEqualTo(VALID_CREATE_AT);
+			assertThat(result.getId()).isEqualTo(MockUserHelper.VALID_ID);
+			assertThat(result.getUsername()).isEqualTo(MockUserHelper.VALID_USERNAME);
+			assertThat(result.getEmail()).isEqualTo(MockUserHelper.VALID_EMAIL);
+			assertThat(result.getCreateAt()).isEqualTo(MockUserHelper.VALID_CREATE_AT);
 		}
 
 		@Test
@@ -179,30 +161,30 @@ public class UserMapperTest {
 
 		private UserEntity createValidUserEntity() {
 			return UserEntity.builder()
-					.id(VALID_ID)
-					.username(VALID_USERNAME)
-					.email(VALID_EMAIL)
-					.password(VALID_HASHED_PASSWORD)
-					.createdAt(Timestamp.from(VALID_CREATE_AT))
+					.id(MockUserHelper.VALID_ID)
+					.username(MockUserHelper.VALID_USERNAME)
+					.email(MockUserHelper.VALID_EMAIL)
+					.password(MockUserHelper.VALID_HASHED_PASSWORD)
+					.createdAt(Timestamp.from(MockUserHelper.VALID_CREATE_AT))
 					.build();
 		}
 
 		private UserEntity createUserEntityWithCreatedAt(Timestamp createdAt) {
 			return UserEntity.builder()
-					.id(VALID_ID)
-					.username(VALID_USERNAME)
-					.email(VALID_EMAIL)
-					.password(VALID_HASHED_PASSWORD)
+					.id(MockUserHelper.VALID_ID)
+					.username(MockUserHelper.VALID_USERNAME)
+					.email(MockUserHelper.VALID_EMAIL)
+					.password(MockUserHelper.VALID_HASHED_PASSWORD)
 					.createdAt(createdAt)
 					.build();
 		}
 
 		private UserEntity createUserEntityWithNullCreatedAt() {
 			return UserEntity.builder()
-					.id(VALID_ID)
-					.username(VALID_USERNAME)
-					.email(VALID_EMAIL)
-					.password(VALID_HASHED_PASSWORD)
+					.id(MockUserHelper.VALID_ID)
+					.username(MockUserHelper.VALID_USERNAME)
+					.email(MockUserHelper.VALID_EMAIL)
+					.password(MockUserHelper.VALID_HASHED_PASSWORD)
 					.createdAt(null)
 					.build();
 		}
@@ -216,7 +198,7 @@ public class UserMapperTest {
 		@DisplayName("Should maintain data consistency in round-trip conversion")
 		public void shouldMaintainDataConsistencyInRoundTrip() {
 			// Given
-			User originalUser = createOriginalUser();
+			User originalUser = MockUserHelper.createValidUser();
 
 			// When - Convert to entity and back to model
 			UserEntity entity = UserMapper.fromModel(originalUser);
@@ -232,7 +214,7 @@ public class UserMapperTest {
 		@DisplayName("Should handle multiple round-trip conversions consistently")
 		public void shouldHandleMultipleRoundTripConversionsConsistently() {
 			// Given
-			User originalUser = createOriginalUser();
+			User originalUser = MockUserHelper.createValidUser();
 
 			// When - Perform multiple round-trip conversions
 			User firstRoundTrip = UserMapper.toModel(UserMapper.fromModel(originalUser));
@@ -244,9 +226,9 @@ public class UserMapperTest {
 			assertThat(secondRoundTrip.getCreateAt()).isEqualTo(firstRoundTrip.getCreateAt());
 		}
 
-		private User createOriginalUser() {
-			return new User(VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, VALID_CREATE_AT);
-		}
+		//		private User createOriginalUser() {
+		//			return new User(VALID_ID, VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, VALID_CREATE_AT);
+		//		}
 	}
 
 	@Nested
@@ -296,7 +278,13 @@ public class UserMapperTest {
 			// Given - Username max 50 chars, Email with valid format
 			String maxUsername = "a".repeat(50); // Maximum allowed length
 			String validLongEmail = "test" + "a".repeat(60) + "@example.com"; // Valid but long email
-			User user = new User(VALID_ID, maxUsername, VALID_PASSWORD, validLongEmail, VALID_CREATE_AT);
+
+			User user =
+					MockUserHelper.createUserBuilder()
+							.username(maxUsername)
+							.email(validLongEmail)
+							.build()
+							.createUser();
 
 			// When
 			UserEntity entity = UserMapper.fromModel(user);
@@ -313,7 +301,12 @@ public class UserMapperTest {
 			// Given - Username with underscore (valid), Email with plus and hyphen (valid)
 			String validUsername = "user_name123";
 			String validEmail = "test+special@domain-name.co.uk";
-			User user = new User(VALID_ID, validUsername, VALID_PASSWORD, validEmail, VALID_CREATE_AT);
+			User user =
+					MockUserHelper.createUserBuilder()
+							.username(validUsername)
+							.email(validEmail)
+							.build()
+							.createUser();
 
 			// When
 			UserEntity entity = UserMapper.fromModel(user);
@@ -330,8 +323,13 @@ public class UserMapperTest {
 			// Given - Valid username with mixed case and numbers
 			String mixedCaseUsername = "User123_Test";
 			String mixedCaseEmail = "Test.User123@Example.Com";
+
 			User user =
-					new User(VALID_ID, mixedCaseUsername, VALID_PASSWORD, mixedCaseEmail, VALID_CREATE_AT);
+					MockUserHelper.createUserBuilder()
+							.username(mixedCaseUsername)
+							.email(mixedCaseEmail)
+							.build()
+							.createUser();
 
 			// When
 			UserEntity entity = UserMapper.fromModel(user);
