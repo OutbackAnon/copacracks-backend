@@ -78,8 +78,7 @@ class CreateUserCaseImplTest {
 	}
 
 	@Test
-	@DisplayName(
-			"Deve lançar UserValidationException quando user\"Deve lançar UserValidationException quando username é inválido\")name é inválido")
+	@DisplayName("Deve lançar UserValidationException quando username é inválido")
 	void shouldThrowExceptionWhenUsernameIsInvalid() {
 		// Given
 		final NewUserDto userDto = new NewUserDto("ab", VALID_PASSWORD, VALID_EMAIL);
