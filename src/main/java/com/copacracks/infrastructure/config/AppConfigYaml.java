@@ -14,13 +14,12 @@ import java.io.InputStream;
 public class AppConfigYaml {
     private Database database;
 
-    public static AppConfigYaml load() {
+    public static AppConfigYaml load(String configPath) {
         try {
-            String path = "configs/local-config.yaml";
             ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
             mapper.findAndRegisterModules();
 
-            InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+            InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configPath);
 
             return mapper.readValue(inputStream, AppConfigYaml.class);
         } catch (IOException err) {
