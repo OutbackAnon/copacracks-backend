@@ -1,23 +1,16 @@
 package com.copacracks.infrastructure.config;
 
 import com.google.inject.Provider;
-import io.github.cdimascio.dotenv.Dotenv;
 
-public class AppConfigProvider implements Provider<AppConfig> {
-	private static final Dotenv dotenv = getDotenv();
+public final class AppConfigProvider implements Provider<AppConfig> {
+	private static final AppEnv env = AppEnv.load();
+    private static final AppConfigYaml configs = AppConfigYaml.load();
 
 	@Override
 	public AppConfig get() {
-		return AppConfig.builder()
-				.env(
-						AppConfig.Env.builder()
-								.appEnv(dotenv.get("APP_ENV", "local"))
-								.securityPepper(dotenv.get("SECURITY_PAPER", "security_pepper"))
-								.build())
+        return AppConfig.builder()
+				.env(env)
+                .config(configs)
 				.build();
-	}
-
-	private static Dotenv getDotenv() {
-		return Dotenv.configure().ignoreIfMissing().ignoreIfMalformed().load();
 	}
 }

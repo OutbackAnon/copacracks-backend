@@ -38,11 +38,12 @@ import lombok.extern.slf4j.Slf4j;
 public class JdbcUserRepository extends BaseJdbcRepository implements UserRepository {
 
 	/** SQL statement for inserting a new user with auto-generated ID. */
-	private static final String INSERT_USER =
-			"INSERT INTO users (username, password, email, created_at) "
-					+ "VALUES (?, ?, ?, ?) RETURNING id";
+    private static final String INSERT_USER =
+            "INSERT INTO users (username, password, email, created_at) "
+                    + "VALUES (?, ?, ?, ?)";
 
-	/** SQL statement for finding a user by their unique identifier. */
+
+    /** SQL statement for finding a user by their unique identifier. */
 	private static final String FIND_BY_ID =
 			"SELECT id, username, password, email FROM users WHERE id = ?";
 

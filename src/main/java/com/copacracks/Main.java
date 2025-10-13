@@ -1,36 +1,35 @@
 package com.copacracks;
 
+import com.copacracks.infrastructure.config.AppConfig;
+import com.copacracks.infrastructure.config.AppEnv;
 import com.copacracks.infrastructure.config.ApplicationModule;
 import com.copacracks.infrastructure.controller.UserController;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import io.github.cdimascio.dotenv.Dotenv;
 import io.javalin.Javalin;
 import io.javalin.plugin.bundled.CorsPluginConfig;
 import lombok.extern.slf4j.Slf4j;
+import io.github.cdimascio.dotenv.Dotenv;
 
 @Slf4j
 @SuppressWarnings("PMD.UseUtilityClass")
 public class Main {
 	public static void main(String[] args) {
 		final Injector injector = Guice.createInjector(new ApplicationModule());
-
-		final UserController userController = injector.getInstance(UserController.class);
+        final Routes routes = injector.getInstance(Routes.class);
 
 		final Javalin app =
 				Javalin.create(
 						config -> {
 							config.bundledPlugins.enableCors(
 									cors -> cors.addRule(CorsPluginConfig.CorsRule::anyHost));
-							config.showJavalinBanner = false;
+							config.showJavalinBanner = true;
+
+                            config.router.apiBuilder(routes);
 						});
 
 		app.before(ctx -> log.info("{} {}", ctx.method(), ctx.path()));
-
-		// Rotas
-		app.post("/api/users", userController::registerUser);
-
-		// Health check
-		app.get("/health", ctx -> ctx.json("OK"));
 
 		// Error handling
 		app.exception(
