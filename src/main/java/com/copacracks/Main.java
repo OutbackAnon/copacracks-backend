@@ -1,16 +1,11 @@
 package com.copacracks;
 
-import com.copacracks.infrastructure.config.AppConfig;
-import com.copacracks.infrastructure.config.AppEnv;
 import com.copacracks.infrastructure.config.ApplicationModule;
-import com.copacracks.infrastructure.controller.UserController;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import io.github.cdimascio.dotenv.Dotenv;
 import io.javalin.Javalin;
 import io.javalin.plugin.bundled.CorsPluginConfig;
 import lombok.extern.slf4j.Slf4j;
-import io.github.cdimascio.dotenv.Dotenv;
 
 @Slf4j
 @SuppressWarnings("PMD.UseUtilityClass")

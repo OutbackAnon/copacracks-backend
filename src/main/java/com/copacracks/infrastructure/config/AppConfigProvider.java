@@ -5,25 +5,25 @@ import com.google.inject.Provider;
 import java.util.Locale;
 
 public final class AppConfigProvider implements Provider<AppConfig> {
-	private static final AppEnv env = AppEnv.load();
-    private static final AppConfigYaml configs = AppConfigYaml.load(resolveConfigFile(env.getAppEnv()));
-
 	@Override
 	public AppConfig get() {
+        final AppEnv env = AppEnv.load();
+        final AppConfigYaml configs = AppConfigYaml.load(resolveConfigFile(env.getAppEnv()));
+
         return AppConfig.builder()
-				.env(env)
+                .env(env)
                 .config(configs)
-				.build();
+                .build();
 	}
 
-    private static String resolveConfigFile(String appEnv) {
+    private String resolveConfigFile(String appEnv) {
         return switch (appEnv.toLowerCase(Locale.ROOT)) {
             case "prod" -> mountFilePath("prod-config");
             default -> mountFilePath("local-config");
         };
     }
 
-    private static String mountFilePath(String fileName) {
+    private String mountFilePath(String fileName) {
         return String.format("configs/%s.yaml", fileName);
     }
 }
