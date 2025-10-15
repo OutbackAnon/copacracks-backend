@@ -27,7 +27,6 @@ public class AppConfigYaml {
             mapper.findAndRegisterModules();
 
             InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configPath);
-
             if (inputStream == null) {
                 logger.error("Configuration file not found: {}", configPath);
                 throw new ConfigurationException(
@@ -35,10 +34,11 @@ public class AppConfigYaml {
                 );
             }
 
-            AppConfigYaml config = mapper.readValue(inputStream, AppConfigYaml.class);
-            logger.info("Configuration loaded successfully");
-
-            return config;
+            try (inputStream) {
+                AppConfigYaml config = mapper.readValue(inputStream, AppConfigYaml.class);
+                logger.info("Configuration loaded successfully");
+                return config;
+            }
         } catch (IOException err) {
             logger.error("Failed to parse configuration file: {}", configPath, err);
             throw new ConfigurationException("Failed to load configuration from: " + configPath, err);

@@ -3,9 +3,11 @@ package com.copacracks.infrastructure.config;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AppEnv {
     private final String securityPepper;
