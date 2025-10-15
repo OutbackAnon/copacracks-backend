@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 public class ApplicationModule extends AbstractModule {
 	@Override
 	protected void configure() {
-        bind(Routes.class).asEagerSingleton();
-        bind(UserController.class).asEagerSingleton();
+		bind(Routes.class).asEagerSingleton();
+		bind(UserController.class).asEagerSingleton();
 
 		// Bind interfaces to implementations
 		bind(UserRepository.class).to(JdbcUserRepository.class);

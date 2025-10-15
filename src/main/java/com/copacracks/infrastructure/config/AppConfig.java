@@ -1,6 +1,5 @@
 package com.copacracks.infrastructure.config;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 
 @Builder
@@ -13,4 +12,3 @@ public record AppConfig(AppEnv env, AppConfigYaml config) {
 		return "local".equalsIgnoreCase(env.getAppEnv());
 	}
 }
-

@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Main {
 	public static void main(String[] args) {
 		final Injector injector = Guice.createInjector(new ApplicationModule());
-        final Routes routes = injector.getInstance(Routes.class);
+		final Routes routes = injector.getInstance(Routes.class);
 
 		final Javalin app =
 				Javalin.create(
@@ -21,7 +21,7 @@ public class Main {
 									cors -> cors.addRule(CorsPluginConfig.CorsRule::anyHost));
 							config.showJavalinBanner = true;
 
-                            config.router.apiBuilder(routes);
+							config.router.apiBuilder(routes);
 						});
 
 		app.before(ctx -> log.info("{} {}", ctx.method(), ctx.path()));
