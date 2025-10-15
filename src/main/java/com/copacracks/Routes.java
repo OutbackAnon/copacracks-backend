@@ -6,6 +6,10 @@ import com.google.inject.Singleton;
 import io.javalin.apibuilder.EndpointGroup;
 import lombok.RequiredArgsConstructor;
 
+import static io.javalin.apibuilder.ApiBuilder.path;
+import static io.javalin.apibuilder.ApiBuilder.get;
+import static io.javalin.apibuilder.ApiBuilder.post;
+
 @Singleton
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 public class Routes implements EndpointGroup {
@@ -13,18 +17,12 @@ public class Routes implements EndpointGroup {
 
 	@Override
 	public void addEndpoints() {
-		path(
-				"/api",
-				() -> {
-					path(
-							"/health",
-							() -> {
+		path("/api", () -> {
+					path("/health", () -> {
 								get(ctx -> ctx.json("OK"));
 							});
 
-					path(
-							"/users",
-							() -> {
+					path("/users", () -> {
 								post(userController::registerUser);
 							});
 				});
