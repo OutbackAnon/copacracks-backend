@@ -1,6 +1,7 @@
 package com.copacracks.domain.model.user;
 
 import com.copacracks.domain.exception.UserValidationException;
+import com.copacracks.domain.security.PasswordEncoder;
 import java.util.regex.Pattern;
 
 /**
@@ -22,7 +23,7 @@ import java.util.regex.Pattern;
  *
  * @param value the password string value that has been validated
  */
-public record Password(String value) {
+public record Password(HashedPassword value) {
 
 	/** Minimum required password length. */
 	private static final int MIN_LENGTH = 8;
@@ -50,7 +51,17 @@ public record Password(String value) {
 	 *     requirements
 	 */
 	public Password {
-		validatePlainPassword(value);
+		if (value == null) {
+			throw new UserValidationException("Hashed password cannot be null");
+		}
+	}
+
+	public static Password fromRaw(RawPassword rawPassword, PasswordEncoder encoder, String pepper) {
+		return new Password(new HashedPassword(encoder.encode(rawPassword.value(), pepper)));
+	}
+
+	public static Password fromHashed(String encodedValue) {
+		return new Password(new HashedPassword(encodedValue));
 	}
 
 	/**
@@ -62,13 +73,17 @@ public record Password(String value) {
 	 * @param plainPassword the password string to be validated
 	 * @throws UserValidationException if the password fails any validation rule
 	 */
-	private static void validatePlainPassword(final String plainPassword) {
+	public static void validatePlainPassword(final String plainPassword) {
 		ensureNotBlank(plainPassword);
 		ensureMinimumLength(plainPassword);
 		ensureContainsUppercase(plainPassword);
 		ensureContainsLowercase(plainPassword);
 		ensureContainsDigit(plainPassword);
 		ensureContainsSpecialChar(plainPassword);
+	}
+
+	public String getHashedPasswordValue() {
+		return value().value();
 	}
 
 	/**

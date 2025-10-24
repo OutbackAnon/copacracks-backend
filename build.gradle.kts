@@ -80,7 +80,10 @@ dependencies {
     implementation(libs.hikari)
     implementation(libs.postgre)
     implementation(libs.bundles.flyway)
-    implementation(libs.bouncycastle)
+    implementation(libs.password4j)
+    implementation(libs.dotenv)
+    implementation(libs.h2)
+    implementation(libs.jackson.yaml)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)

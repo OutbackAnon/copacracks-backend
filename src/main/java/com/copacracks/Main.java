@@ -1,7 +1,6 @@
 package com.copacracks;
 
 import com.copacracks.infrastructure.config.ApplicationModule;
-import com.copacracks.infrastructure.controller.UserController;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.javalin.Javalin;
@@ -13,24 +12,19 @@ import lombok.extern.slf4j.Slf4j;
 public class Main {
 	public static void main(String[] args) {
 		final Injector injector = Guice.createInjector(new ApplicationModule());
-
-		final UserController userController = injector.getInstance(UserController.class);
+		final Routes routes = injector.getInstance(Routes.class);
 
 		final Javalin app =
 				Javalin.create(
 						config -> {
 							config.bundledPlugins.enableCors(
 									cors -> cors.addRule(CorsPluginConfig.CorsRule::anyHost));
-							config.showJavalinBanner = false;
+							config.showJavalinBanner = true;
+
+							config.router.apiBuilder(routes);
 						});
 
 		app.before(ctx -> log.info("{} {}", ctx.method(), ctx.path()));
-
-		// Rotas
-		app.post("/api/users", userController::registerUser);
-
-		// Health check
-		app.get("/health", ctx -> ctx.json("OK"));
 
 		// Error handling
 		app.exception(

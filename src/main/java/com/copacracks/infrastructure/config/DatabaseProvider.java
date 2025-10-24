@@ -4,11 +4,13 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import java.sql.SQLException;
 import javax.sql.DataSource;
-import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
+import org.h2.tools.Server;
 
 /**
  * Database configuration and DataSource provider for the CopaCracks application.
@@ -35,24 +37,31 @@ import org.flywaydb.core.api.FlywayException;
  */
 @Slf4j
 @Singleton
-@NoArgsConstructor
+@AllArgsConstructor
 public class DatabaseProvider implements Provider<DataSource> {
-	private static final String DB_URL = "jdbc:postgresql://localhost:5432/copacracks";
-	private static final String DB_USERNAME = "admin";
-	private static final String DB_PASSWORD = "admin";
+	//    private static final String DB_URL = "jdbc:postgresql://localhost:5432/copacracks";
+
+	private AppConfig appConfig;
 
 	@Override
 	public DataSource get() {
 		final HikariConfig config = new HikariConfig();
-		config.setJdbcUrl(DB_URL);
-		config.setUsername(DB_USERNAME);
-		config.setPassword(DB_PASSWORD);
-		config.setDriverClassName("org.postgresql.Driver");
-		config.setMaximumPoolSize(20);
-		config.setMinimumIdle(5);
-		config.setConnectionTimeout(30_000);
-		config.setIdleTimeout(600_000);
-		config.setMaxLifetime(1_800_000);
+		config.setJdbcUrl(appConfig.env().getDbUrl());
+		config.setUsername(appConfig.env().getDbUsername());
+		config.setPassword(appConfig.env().getDbPassword());
+		//        config.setDriverClassName("org.postgresql.Driver");
+		config.setDriverClassName(appConfig.config().getDatabase().driver());
+		config.setMaximumPoolSize(appConfig.config().getDatabase().maximumPoolSize());
+		config.setMinimumIdle(appConfig.config().getDatabase().minimumIdle());
+		config.setConnectionTimeout(appConfig.config().getDatabase().connectionTimeout());
+		config.setIdleTimeout(appConfig.config().getDatabase().idleTimeout());
+		config.setMaxLifetime(appConfig.config().getDatabase().maxLifetime());
+
+		try {
+			Server webServer = Server.createWebServer("-webPort", "8082", "-tcpAllowOthers").start();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 
 		final DataSource dataSource = new HikariDataSource(config);
 
@@ -67,10 +76,12 @@ public class DatabaseProvider implements Provider<DataSource> {
 					Flyway.configure()
 							.dataSource(dataSource)
 							.locations("classpath:db/migration")
-							.cleanDisabled(false)
+							.cleanDisabled(appConfig.config().getDatabase().flyway().cleanOnDisabled())
 							.load();
 
-			flyway.clean();
+			if (appConfig.config().getDatabase().flyway().cleanMigrationOnStart()) {
+				flyway.clean();
+			}
 			flyway.migrate();
 			log.info("Database migrations executed successfully");
 		} catch (FlywayException e) {

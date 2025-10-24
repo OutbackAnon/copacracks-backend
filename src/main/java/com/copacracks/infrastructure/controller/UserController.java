@@ -1,8 +1,9 @@
 package com.copacracks.infrastructure.controller;
 
-import com.copacracks.application.dto.CreateUserRequestDto;
+import com.copacracks.application.dto.NewUserDto;
 import com.copacracks.application.usecases.CreateUserCase;
 import com.copacracks.domain.exception.UserValidationException;
+import com.copacracks.infrastructure.dto.CreateUserRequestDto;
 import com.copacracks.infrastructure.dto.ErrorResponse;
 import com.copacracks.infrastructure.dto.UserResponse;
 import com.copacracks.infrastructure.exception.ControllerException;
@@ -42,7 +43,8 @@ public class UserController {
 		try {
 			final CreateUserRequestDto request = ctx.bodyAsClass(CreateUserRequestDto.class);
 
-			createUserCase.execute(request);
+			createUserCase.execute(
+					new NewUserDto(request.username(), request.password(), request.email()));
 
 			ctx.status(HttpStatus.CREATED);
 			ctx.json(new UserResponse(1L, request.username(), request.email()));

@@ -8,7 +8,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
+import java.sql.Timestamp;
 import java.util.Optional;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * JDBC-based implementation of the UserRepository interface.
  *
  * <p>This repository provides persistent storage operations for User entities using direct JDBC
- * operations. It extends {@link AbstractJdbcRepository} to leverage common database utilities while
+ * operations. It extends {@link BaseJdbcRepository} to leverage common database utilities while
  * implementing the specific business logic for user data access.
  *
  * <p>Key features:
@@ -39,16 +39,15 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 
 	/** SQL statement for inserting a new user with auto-generated ID. */
 	private static final String INSERT_USER =
-			"INSERT INTO users (username, password_hash, email, created_at) "
-					+ "VALUES (?, ?, ?, ?) RETURNING id";
+			"INSERT INTO users (username, password, email, created_at) " + "VALUES (?, ?, ?, ?)";
 
 	/** SQL statement for finding a user by their unique identifier. */
 	private static final String FIND_BY_ID =
-			"SELECT id, username, password_hash, email FROM users WHERE id = ?";
+			"SELECT id, username, password, email FROM users WHERE id = ?";
 
 	/** SQL statement for finding a user by their username. */
 	private static final String FIND_BY_USERNAME =
-			"SELECT id, username, password_hash, email FROM users " + "WHERE username = ?";
+			"SELECT id, username, password, email FROM users " + "WHERE username = ?";
 
 	/** SQL statement for checking if a username exists in the database. */
 	private static final String EXISTS_BY_USERNAME = "SELECT 1 FROM users WHERE username = ? LIMIT 1";
@@ -80,7 +79,7 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 	 * @throws IllegalArgumentException if user is null
 	 */
 	@Override
-	public User save(final User user) {
+	public Long save(final User user) {
 		if (user.isNew()) {
 			return insertUser(user);
 		} else {
@@ -100,7 +99,7 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 	 * @throws IllegalArgumentException if id is null
 	 */
 	@Override
-	public Optional<User> findById(final Long id) {
+	public Optional<UserEntity> findById(final Long id) {
 		return executeSingleResultQuery(
 				FIND_BY_ID, stmt -> stmt.setLong(1, id), this::mapResultSetToUser);
 	}
@@ -117,7 +116,7 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 	 * @throws IllegalArgumentException if username is null or empty
 	 */
 	@Override
-	public Optional<User> findByUsername(final String username) {
+	public Optional<UserEntity> findByUsername(final String username) {
 		return executeSingleResultQuery(
 				FIND_BY_USERNAME, stmt -> stmt.setString(1, username), this::mapResultSetToUser);
 	}
@@ -154,24 +153,17 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 	 * @return a new User instance with the generated database ID
 	 * @throws RuntimeException if a database error occurs during insertion
 	 */
-	private User insertUser(final User user) {
+	private Long insertUser(final User user) {
 		final UserEntity mappedUser = UserMapper.fromModel(user);
-		final Long generateId =
-				executeInsertAndReturnId(
-						INSERT_USER,
-						stmt -> {
-							stmt.setString(1, mappedUser.getUsername());
-							stmt.setString(2, mappedUser.getPassword());
-							stmt.setString(3, mappedUser.getEmail());
-							stmt.setTimestamp(4, mappedUser.getCreatedAt());
-						});
 
-		return new User(
-				generateId,
-				user.getUsername(),
-				user.getHashedPassword(),
-				user.getEmail(),
-				user.getCreateAt());
+		return executeInsertAndReturnId(
+				INSERT_USER,
+				stmt -> {
+					stmt.setString(1, mappedUser.getUsername());
+					stmt.setString(2, mappedUser.getPassword());
+					stmt.setString(3, mappedUser.getEmail());
+					stmt.setTimestamp(4, mappedUser.getCreatedAt());
+				});
 	}
 
 	/**
@@ -195,13 +187,12 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 	 * @return a new User instance populated with data from the ResultSet
 	 * @throws SQLException if a database access error occurs or column is missing
 	 */
-	private User mapResultSetToUser(final ResultSet rs) throws SQLException {
-		return new User(
+	private UserEntity mapResultSetToUser(final ResultSet rs) throws SQLException {
+		return new UserEntity(
 				rs.getLong("id"),
 				rs.getString("username"),
-				rs.getString("password_raw"),
+				rs.getString("password"),
 				rs.getString("email"),
-				rs.getString("password_hash"),
-				rs.getObject("created_at", Instant.class));
+				rs.getObject("created_at", Timestamp.class));
 	}
 }
