@@ -19,13 +19,13 @@ public class AppConfigYaml {
 	private Database database;
 
 	public static AppConfigYaml load(String configPath) {
-        if (configPath == null || configPath.trim().isEmpty()) {
-            String message = "Configuration path cannot be null or empty";
-            logger.error(message);
-            throw new ConfigurationException(message);
-        }
+		if (configPath == null || configPath.trim().isEmpty()) {
+			String message = "Configuration path cannot be null or empty";
+			logger.error(message);
+			throw new ConfigurationException(message);
+		}
 
-        try {
+		try {
 			logger.info("Loading configuration from: {}", configPath);
 
 			ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
