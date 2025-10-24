@@ -29,7 +29,7 @@ public class CreateUserCaseImpl implements CreateUserCase {
 	public void execute(final NewUserDto userDto) {
 		User.verifyPasswordStrength(userDto.rawPassword());
 
-		final String securityPepper = appConfig.env().securityPepper();
+		final String securityPepper = appConfig.env().getSecurityPepper();
 
 		final RawPassword rawPassword = new RawPassword(userDto.rawPassword());
 		final Password password = Password.fromRaw(rawPassword, passwordEncoder, securityPepper);

@@ -1,0 +1,12 @@
+database:
+  driver: "org.postgresql.Driver"
+  maximumPoolSize: 50
+  minimumIdle: 10
+  connectionTimeout: 30000
+  idleTimeout: 600000
+  maxLifetime: 1800000
+  flyway:
+    cleanOnDisabled: false
+    cleanMigrationOnStart: false
+  server:
+    port: "8080"

@@ -3,15 +3,12 @@ package com.copacracks.infrastructure.config;
 import lombok.Builder;
 
 @Builder
-public record AppConfig(Env env) {
+public record AppConfig(AppEnv env, AppConfigYaml config) {
 	public boolean isProduction() {
-		return "prod".equalsIgnoreCase(env.appEnv());
+		return "prod".equalsIgnoreCase(env.getAppEnv());
 	}
 
 	public boolean isDevelopment() {
-		return "local".equalsIgnoreCase(env.appEnv());
+		return "local".equalsIgnoreCase(env.getAppEnv());
 	}
-
-	@Builder
-	public record Env(String securityPepper, String appEnv) {}
 }

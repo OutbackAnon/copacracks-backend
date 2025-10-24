@@ -1,23 +1,25 @@
 package com.copacracks.infrastructure.config;
 
 import com.google.inject.Provider;
-import io.github.cdimascio.dotenv.Dotenv;
+import java.util.Locale;
 
-public class AppConfigProvider implements Provider<AppConfig> {
-	private static final Dotenv dotenv = getDotenv();
-
+public final class AppConfigProvider implements Provider<AppConfig> {
 	@Override
 	public AppConfig get() {
-		return AppConfig.builder()
-				.env(
-						AppConfig.Env.builder()
-								.appEnv(dotenv.get("APP_ENV", "local"))
-								.securityPepper(dotenv.get("SECURITY_PAPER", "security_pepper"))
-								.build())
-				.build();
+		final AppEnv env = AppEnv.load();
+		final AppConfigYaml configs = AppConfigYaml.load(resolveConfigFile(env.getAppEnv()));
+
+		return AppConfig.builder().env(env).config(configs).build();
 	}
 
-	private static Dotenv getDotenv() {
-		return Dotenv.configure().ignoreIfMissing().ignoreIfMalformed().load();
+	private String resolveConfigFile(String appEnv) {
+		return switch (appEnv.toLowerCase(Locale.ROOT)) {
+			case "prod" -> mountFilePath("prod-config");
+			default -> mountFilePath("local-config");
+		};
+	}
+
+	private String mountFilePath(String fileName) {
+		return String.format("configs/%s.yaml", fileName);
 	}
 }

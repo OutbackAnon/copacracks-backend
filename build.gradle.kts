@@ -82,6 +82,8 @@ dependencies {
     implementation(libs.bundles.flyway)
     implementation(libs.password4j)
     implementation(libs.dotenv)
+    implementation(libs.h2)
+    implementation(libs.jackson.yaml)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)

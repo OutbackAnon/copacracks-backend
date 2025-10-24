@@ -1,9 +1,11 @@
 package com.copacracks.infrastructure.config;
 
+import com.copacracks.Routes;
 import com.copacracks.application.usecases.CreateUserCase;
 import com.copacracks.application.usecases.impl.CreateUserCaseImpl;
 import com.copacracks.domain.repository.UserRepository;
 import com.copacracks.domain.security.PasswordEncoder;
+import com.copacracks.infrastructure.controller.UserController;
 import com.copacracks.infrastructure.persistence.repository.JdbcUserRepository;
 import com.copacracks.infrastructure.security.PasswordEncoderImpl;
 import com.google.inject.AbstractModule;
@@ -16,6 +18,9 @@ import lombok.NoArgsConstructor;
 public class ApplicationModule extends AbstractModule {
 	@Override
 	protected void configure() {
+		bind(Routes.class).asEagerSingleton();
+		bind(UserController.class).asEagerSingleton();
+
 		// Bind interfaces to implementations
 		bind(UserRepository.class).to(JdbcUserRepository.class);
 		bind(CreateUserCase.class).to(CreateUserCaseImpl.class);
@@ -24,8 +29,8 @@ public class ApplicationModule extends AbstractModule {
 
 	@Provides
 	@Singleton
-	public DataSource provideDataSource() {
-		return new DatabaseProvider().get();
+	public DataSource provideDataSource(AppConfig appConfig) {
+		return new DatabaseProvider(appConfig).get();
 	}
 
 	@Provides
