@@ -40,7 +40,18 @@ public class AppConfigYaml {
 
 			try (inputStream) {
 				AppConfigYaml config = mapper.readValue(inputStream, AppConfigYaml.class);
-				logger.info("Configuration loaded successfully");
+
+                if (config.database == null) {
+                    throw new ConfigurationException("Missing required section: 'database' in " + configPath);
+                }
+                if (config.database.flyway == null) {
+                    throw new ConfigurationException("Missing required section: 'database.flyway' in " + configPath);
+                }
+                if (config.database.server == null) {
+                    throw new ConfigurationException("Missing required section: 'database.server' in " + configPath);
+                }
+                logger.info("Configuration loaded successfully");
+
 				return config;
 			}
 		} catch (IOException err) {

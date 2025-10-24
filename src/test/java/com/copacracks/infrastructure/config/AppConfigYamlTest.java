@@ -77,7 +77,7 @@ public class AppConfigYamlTest {
 										.isTrue();
 
 								assertThat(flyway.cleanOnDisabled())
-										.as("cleanOnDisabled should be false in production")
+										.as("cleanOnDisabled should be false in local/dev")
 										.isFalse();
 							});
 		}
@@ -225,7 +225,7 @@ public class AppConfigYamlTest {
 					.as("Should throw ConfigurationException for malformed YAML")
 					.isInstanceOf(ConfigurationException.class)
 					.hasMessageContaining("Failed to load configuration")
-					.hasCauseInstanceOf(IOException.class); // Causa raiz
+					.hasCauseInstanceOf(IOException.class);
 		}
 
 		@Test
@@ -246,7 +246,7 @@ public class AppConfigYamlTest {
 	class DataTypeTests {
 
 		@Test
-		@DisplayName("It should validate numeric typess")
+		@DisplayName("It should validate numeric types")
 		void shouldValidateNumericTypes() {
 			// Arrange & Act
 			AppConfigYaml config = AppConfigYaml.load("configs/local-config.yaml");
@@ -255,17 +255,14 @@ public class AppConfigYamlTest {
 			// Assert
 			assertThat(db.maximumPoolSize())
 					.as("maximumPoolSize should be an integer")
-					.isInstanceOf(Integer.class)
 					.isBetween(1, 1000);
 
 			assertThat(db.minimumIdle())
 					.as("minimumIdle should be a positive integer")
-					.isInstanceOf(Integer.class)
 					.isPositive();
 
 			assertThat(db.connectionTimeout())
 					.as("connectionTimeout should be in milliseconds")
-					.isInstanceOf(Integer.class)
 					.isGreaterThan(1000);
 		}
 
@@ -278,13 +275,12 @@ public class AppConfigYamlTest {
 
 			// Assert
 			assertThat(flyway.cleanOnDisabled())
-					.as("cleanOnDisabled should be a boolean")
-					.isInstanceOf(Boolean.class)
-					.isIn(true, false);
+					.as("leanOnDisabled should default to false in local")
+					.isFalse();
 
 			assertThat(flyway.cleanMigrationOnStart())
-					.as("cleanMigrationOnStart should be a boolean")
-					.isInstanceOf(Boolean.class);
+					.as("cleanMigrationOnStart should be true in local")
+                    .isTrue();
 		}
 
 		@Test
