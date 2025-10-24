@@ -1,0 +1,12 @@
+database:
+  driver: "org.h2.Driver"
+  maximumPoolSize: 0
+  minimumIdle: 0
+  connectionTimeout: 0
+  idleTimeout: 0
+  maxLifetime: 0
+  flyway:
+    cleanOnDisabled: false
+    cleanMigrationOnStart: false
+  server:
+    port: "0"
