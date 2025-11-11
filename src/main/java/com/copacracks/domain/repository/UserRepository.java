@@ -49,7 +49,7 @@ public interface UserRepository {
 	 * @return an {@link Optional} containing the user if found, or empty if not found
 	 * @throws IllegalArgumentException if the username parameter is null or empty
 	 */
-	Optional<UserEntity> findByUsername(String username);
+	Optional<User> findByUsername(String username);
 
 	/**
 	 * Checks if a user with the specified username exists in the repository.

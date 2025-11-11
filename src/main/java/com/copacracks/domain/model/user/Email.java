@@ -26,9 +26,9 @@ public record Email(String value) {
 	 *
 	 * @return true se o email for válido
 	 */
-	public boolean isValid() {
-		return value != null && !value.isEmpty();
-	}
+    public boolean isValid() {
+        return value != null && !value.isEmpty();
+    }
 
 	/**
 	 * Valida o email fornecido.

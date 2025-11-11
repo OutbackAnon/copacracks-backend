@@ -116,10 +116,12 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 	 * @throws IllegalArgumentException if username is null or empty
 	 */
 	@Override
-	public Optional<UserEntity> findByUsername(final String username) {
-		return executeSingleResultQuery(
+	public Optional<User> findByUsername(final String username) {
+		Optional<UserEntity> userEntity = executeSingleResultQuery(
 				FIND_BY_USERNAME, stmt -> stmt.setString(1, username), this::mapResultSetToUser);
-	}
+
+        return userEntity.map(UserMapper::toModel);
+    }
 
 	/**
 	 * Checks if a user with the specified username exists in the database.

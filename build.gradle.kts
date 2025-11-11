@@ -84,6 +84,10 @@ dependencies {
     implementation(libs.dotenv)
     implementation(libs.h2)
     implementation(libs.jackson.yaml)
+    implementation(libs.jjwt.api)
+
+    runtimeOnly(libs.jjwt.jackson)
+    runtimeOnly(libs.jjwt.impl)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
