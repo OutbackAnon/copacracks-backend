@@ -11,6 +11,12 @@ public class PartialUser {
         this.email = new Email(email);
     }
 
+    public PartialUser(String username, String password) {
+        this.username = new Username(username);
+        this.password = new RawPassword(password);
+        this.email = null;
+    }
+
     public Email getEmail() {
         return email;
     }

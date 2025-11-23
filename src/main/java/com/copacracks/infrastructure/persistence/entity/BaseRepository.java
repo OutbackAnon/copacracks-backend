@@ -1,6 +1,8 @@
 package com.copacracks.infrastructure.persistence.entity;
 
+import java.util.Optional;
+
 public interface BaseRepository <T, K> {
     K save(T entity);
-    T findById(K id);
+    Optional<T> findById(K id);
 }

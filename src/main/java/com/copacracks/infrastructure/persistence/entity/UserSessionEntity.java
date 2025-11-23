@@ -7,12 +7,13 @@ import java.util.UUID;
 
 @Builder
 public record UserSessionEntity(
-        UUID id,
+        String id,
         Long userId,
         String refreshToken,
         Timestamp createdAt,
         Timestamp expiresAt,
         boolean revoked,
+        String locale,
         String deviceInfo,
         String ipAddress) {
 }

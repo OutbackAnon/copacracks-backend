@@ -1,8 +1,11 @@
 package com.copacracks.application.usecases.impl;
 
 import com.copacracks.application.usecases.UserLoginUseCase;
+import com.copacracks.application.usecases.model.UsecaseResponse;
+import com.copacracks.application.usecases.model.UsecaseStatus;
 import com.copacracks.domain.exception.UserAuthException;
 import com.copacracks.domain.model.auth.UserAuth;
+import com.copacracks.domain.model.auth.UserSession;
 import com.copacracks.domain.model.user.PartialUser;
 import com.copacracks.domain.model.user.User;
 import com.copacracks.domain.repository.UserRepository;
@@ -10,10 +13,12 @@ import com.copacracks.domain.repository.UserSessionRepository;
 import com.copacracks.domain.security.JwtTokenGenerator;
 import com.copacracks.domain.security.PasswordEncoder;
 import com.copacracks.infrastructure.config.AppConfig;
+import com.copacracks.infrastructure.persistence.entity.UserSessionEntity;
 import com.copacracks.infrastructure.security.PasswordEncoderImpl;
 import com.google.inject.Inject;
 
 import java.nio.file.attribute.UserDefinedFileAttributeView;
+import java.util.Map;
 import java.util.Optional;
 
 public class UserLoginUserCaseImpl implements UserLoginUseCase {
@@ -34,7 +39,7 @@ public class UserLoginUserCaseImpl implements UserLoginUseCase {
     }
 
     @Override
-    public UserAuth execute(PartialUser partialUser) {
+    public UsecaseResponse<Void> execute(PartialUser partialUser) {
          Optional<User> userResult = userRepository.findByUsername(partialUser.getUsername().value());
 
          if (userResult.isEmpty()) {
@@ -52,8 +57,9 @@ public class UserLoginUserCaseImpl implements UserLoginUseCase {
          String accessToken = jwtTokenGenerator.generateAccessToken(user.getUsername());
          String refreshToken = jwtTokenGenerator.generateRefreshToken(user.getUsername());
 
+        UserSession userSession = UserSession.createSession(user.getId(), refreshToken, false, "", "", "");
+        userSessionRepository.save(userSession);
 
-
-        return new UserAuth(accessToken, refreshToken);
+        return new UsecaseResponse<>(Map.of("ACCESS_TOKEN", accessToken, "REFRESH_TOKEN", refreshToken), UsecaseStatus.SUCCESS_NO_CONTENT);
     }
 }
