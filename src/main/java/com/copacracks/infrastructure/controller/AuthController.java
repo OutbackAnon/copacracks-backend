@@ -3,18 +3,28 @@ package com.copacracks.infrastructure.controller;
 import com.copacracks.application.usecases.UserLoginUseCase;
 import com.copacracks.application.usecases.model.UsecaseResponse;
 import com.copacracks.domain.model.user.PartialUser;
+import com.copacracks.domain.security.JwtTokenGenerator;
 import com.copacracks.infrastructure.dto.UserLoginDto;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.javalin.http.Context;
 import io.javalin.http.Cookie;
+import io.javalin.openapi.HttpMethod;
+import io.javalin.openapi.OpenApi;
+import io.javalin.openapi.OpenApiResponse;
 import lombok.RequiredArgsConstructor;
 
 @Singleton
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 public class AuthController {
     private final UserLoginUseCase userLoginUseCase;
+    private final JwtTokenGenerator jwtTokenGenerator;
 
+    @OpenApi(path = "/auth/login", methods = HttpMethod.POST, tags = { "Auth" }, responses = {
+            @OpenApiResponse(status = "200", description = "Usuario logado com sucesso!"),
+            @OpenApiResponse(status = "401", description = "Credenciais invalidas!"),
+            @OpenApiResponse(status = "500", description = "Erro interno do servidor!")
+    })
     public void login(final Context ctx) {
         final UserLoginDto payload = ctx.bodyAsClass(UserLoginDto.class);
         PartialUser partialUser = new PartialUser(payload.username(), payload.password());
@@ -30,5 +40,4 @@ public class AuthController {
         ctx.cookie(refreshTokenCookie);
         ctx.status(200).result("Usuario logado com sucesso!");
     }
-
 }

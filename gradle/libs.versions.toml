@@ -23,6 +23,7 @@ dotenv = "3.2.0"
 h2 = "2.3.232"
 jackson-yaml = "2.20.0"
 jjwt = "0.13.0"
+openapi = "6.1.3"
 
 [libraries]
 javalin-bundle = { module = "io.javalin:javalin-bundle", version.ref = "javalin" }
@@ -49,11 +50,15 @@ jackson-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-y
 jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
 jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
 jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
+openapi-plugin = { module = "io.javalin.community.openapi:javalin-openapi-plugin", version.ref = "openapi" }
+openapi-redoc = { module = "io.javalin.community.openapi:javalin-redoc-plugin", version.ref = "openapi" }
+openapi-annotation = { module = "io.javalin.community.openapi:openapi-annotation-processor", version.ref = "openapi" }
 
 [bundles]
 testcontainers = ["testcontainers-junit", "testcontainers-postgre"]
 mockito = ["mockito", "mockito-junit"]
 flyway = ["flyway-core", "flyway-postgre"]
+openapi = ["openapi-plugin", "openapi-redoc"]
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

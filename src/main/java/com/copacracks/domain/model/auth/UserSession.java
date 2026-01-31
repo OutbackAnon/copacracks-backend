@@ -15,7 +15,8 @@ public record UserSession(
         Instant expiresAt
 
 ) {
-    public static UserSession createSession(Long userId, String refreshToken, boolean revoked, String deviceInfo, String locale, String ipAddress) {
+    public static UserSession createSession(Long userId, String refreshToken, boolean revoked, String deviceInfo,
+            String locale, String ipAddress) {
         return new UserSession(
                 UUID.randomUUID(),
                 userId,
@@ -25,7 +26,6 @@ public record UserSession(
                 locale,
                 ipAddress,
                 Instant.now(),
-                Instant.now()
-        );
+                Instant.now());
     }
 }

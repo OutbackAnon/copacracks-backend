@@ -1,4 +1,4 @@
-package com.copacracks;
+    package com.copacracks;
 
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;

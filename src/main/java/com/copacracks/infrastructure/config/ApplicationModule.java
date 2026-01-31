@@ -27,7 +27,7 @@ public class ApplicationModule extends AbstractModule {
 	protected void configure() {
 		bind(Routes.class).asEagerSingleton();
 		bind(UserController.class).asEagerSingleton();
-		bind(AuthController.class).asEagerSingleton();
+		// bind(AuthController.class).asEagerSingleton();
 
 		// Bind interfaces to implementations
 		bind(UserRepository.class).to(JdbcUserRepository.class);
