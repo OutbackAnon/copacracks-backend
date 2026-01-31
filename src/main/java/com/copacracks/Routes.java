@@ -1,4 +1,4 @@
-    package com.copacracks;
+package com.copacracks;
 
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
@@ -15,21 +15,29 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 public class Routes implements EndpointGroup {
 	private final UserController userController;
-    private final AuthController authController;
+	private final AuthController authController;
 
 	@Override
 	public void addEndpoints() {
-		path("/api", () -> {
-            path("/health", () -> {
-                        get(ctx -> ctx.json("OK"));
-                    });
+		path(
+				"/api",
+				() -> {
+					path(
+							"/health",
+							() -> {
+								get(ctx -> ctx.json("OK"));
+							});
 
-            path("/users", () -> {
-                        post(userController::registerUser);
-                    });
-            path("/auth", () -> {
-                post("/login", authController::login);
-            });
-        });
+					path(
+							"/users",
+							() -> {
+								post(userController::registerUser);
+							});
+					path(
+							"/auth",
+							() -> {
+								post("/login", authController::login);
+							});
+				});
 	}
 }

@@ -5,5 +5,5 @@ import com.copacracks.domain.model.user.PartialUser;
 
 @FunctionalInterface
 public interface UserLoginUseCase {
-    UsecaseResponse<Void> execute(PartialUser partialUser);
+	UsecaseResponse<Void> execute(PartialUser partialUser);
 }

@@ -16,25 +16,32 @@ public class Main {
 		final Injector injector = Guice.createInjector(new ApplicationModule());
 		final Routes routes = injector.getInstance(Routes.class);
 
-		final Javalin app = Javalin.create(
-				config -> {
-					config.bundledPlugins.enableCors(
-							cors -> cors.addRule(CorsPluginConfig.CorsRule::anyHost));
-					config.showJavalinBanner = true;
-					config.router.apiBuilder(routes);
-					config.registerPlugin(new OpenApiPlugin(pluginConfig -> {
-						pluginConfig.withDefinitionConfiguration((version, definition) -> {
-							definition.withInfo(info -> {
-								info.setTitle("Javalin open api");
-								info.setVersion("1.0.0");
-							});
+		final Javalin app =
+				Javalin.create(
+						config -> {
+							config.bundledPlugins.enableCors(
+									cors -> cors.addRule(CorsPluginConfig.CorsRule::anyHost));
+							config.showJavalinBanner = true;
+							config.router.apiBuilder(routes);
+							config.registerPlugin(
+									new OpenApiPlugin(
+											pluginConfig -> {
+												pluginConfig.withDefinitionConfiguration(
+														(version, definition) -> {
+															definition.withInfo(
+																	info -> {
+																		info.setTitle("Javalin open api");
+																		info.setVersion("1.0.0");
+																	});
+														});
+											}));
+							config.registerPlugin(
+									new ReDocPlugin(
+											pluginConfig -> {
+												pluginConfig.setDocumentationPath("/openapi");
+												pluginConfig.setUiPath("/redoc");
+											}));
 						});
-					}));
-					config.registerPlugin(new ReDocPlugin(pluginConfig -> {
-						pluginConfig.setDocumentationPath("/openapi");
-						pluginConfig.setUiPath("/redoc");
-					}));
-				});
 
 		app.before(ctx -> log.info("{} {}", ctx.method(), ctx.path()));
 

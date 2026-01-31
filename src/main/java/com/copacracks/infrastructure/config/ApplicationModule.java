@@ -9,7 +9,6 @@ import com.copacracks.domain.repository.UserRepository;
 import com.copacracks.domain.repository.UserSessionRepository;
 import com.copacracks.domain.security.JwtTokenGenerator;
 import com.copacracks.domain.security.PasswordEncoder;
-import com.copacracks.infrastructure.controller.AuthController;
 import com.copacracks.infrastructure.controller.UserController;
 import com.copacracks.infrastructure.persistence.repository.JdbcUserRepository;
 import com.copacracks.infrastructure.persistence.repository.JdbcUserSessionRepository;
