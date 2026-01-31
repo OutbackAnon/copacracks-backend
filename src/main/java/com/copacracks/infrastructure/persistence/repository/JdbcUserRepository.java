@@ -39,15 +39,15 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 
 	/** SQL statement for inserting a new user with auto-generated ID. */
 	private static final String INSERT_USER =
-			"INSERT INTO users (username, password, email, created_at) " + "VALUES (?, ?, ?, ?)";
+			"INSERT INTO users (username, password, email, created_at)" + "VALUES (?, ?, ?, ?)";
 
 	/** SQL statement for finding a user by their unique identifier. */
 	private static final String FIND_BY_ID =
-			"SELECT id, username, password, email FROM users WHERE id = ?";
+			"SELECT id, username, password, email, created_at FROM users WHERE id = ?";
 
 	/** SQL statement for finding a user by their username. */
 	private static final String FIND_BY_USERNAME =
-			"SELECT id, username, password, email FROM users " + "WHERE username = ?";
+			"SELECT id, username, password, email, created_at FROM users " + "WHERE username = ?";
 
 	/** SQL statement for checking if a username exists in the database. */
 	private static final String EXISTS_BY_USERNAME = "SELECT 1 FROM users WHERE username = ? LIMIT 1";
@@ -116,9 +116,12 @@ public class JdbcUserRepository extends BaseJdbcRepository implements UserReposi
 	 * @throws IllegalArgumentException if username is null or empty
 	 */
 	@Override
-	public Optional<UserEntity> findByUsername(final String username) {
-		return executeSingleResultQuery(
-				FIND_BY_USERNAME, stmt -> stmt.setString(1, username), this::mapResultSetToUser);
+	public Optional<User> findByUsername(final String username) {
+		Optional<UserEntity> userEntity =
+				executeSingleResultQuery(
+						FIND_BY_USERNAME, stmt -> stmt.setString(1, username), this::mapResultSetToUser);
+
+		return userEntity.map(UserMapper::toModel);
 	}
 
 	/**

@@ -4,6 +4,8 @@ import com.copacracks.infrastructure.config.ApplicationModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.javalin.Javalin;
+import io.javalin.openapi.plugin.OpenApiPlugin;
+import io.javalin.openapi.plugin.redoc.ReDocPlugin;
 import io.javalin.plugin.bundled.CorsPluginConfig;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,8 +22,25 @@ public class Main {
 							config.bundledPlugins.enableCors(
 									cors -> cors.addRule(CorsPluginConfig.CorsRule::anyHost));
 							config.showJavalinBanner = true;
-
 							config.router.apiBuilder(routes);
+							config.registerPlugin(
+									new OpenApiPlugin(
+											pluginConfig -> {
+												pluginConfig.withDefinitionConfiguration(
+														(version, definition) -> {
+															definition.withInfo(
+																	info -> {
+																		info.setTitle("Javalin open api");
+																		info.setVersion("1.0.0");
+																	});
+														});
+											}));
+							config.registerPlugin(
+									new ReDocPlugin(
+											pluginConfig -> {
+												pluginConfig.setDocumentationPath("/openapi");
+												pluginConfig.setUiPath("/redoc");
+											}));
 						});
 
 		app.before(ctx -> log.info("{} {}", ctx.method(), ctx.path()));

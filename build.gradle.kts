@@ -84,9 +84,15 @@ dependencies {
     implementation(libs.dotenv)
     implementation(libs.h2)
     implementation(libs.jackson.yaml)
+    implementation(libs.jjwt.api)
+    implementation(libs.bundles.openapi)
+
+    runtimeOnly(libs.jjwt.jackson)
+    runtimeOnly(libs.jjwt.impl)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
+    annotationProcessor(libs.openapi.annotation)
     testCompileOnly(libs.lombok)
     testAnnotationProcessor(libs.lombok)
 

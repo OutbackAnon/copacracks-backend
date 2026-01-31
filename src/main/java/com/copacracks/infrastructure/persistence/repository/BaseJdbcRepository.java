@@ -42,6 +42,22 @@ public class BaseJdbcRepository {
 	/** The data source used for obtaining database connections. */
 	protected final DataSource dataSource;
 
+	protected void executeInsert(final String sql, final PreparedStatementConsumer paramsSetter) {
+		try (Connection conn = dataSource.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+			paramsSetter.accept(stmt);
+
+			final int rowsAffected = stmt.executeUpdate();
+			if (rowsAffected == 0) {
+				throw new DatabaseException("Insert failed, no rows affected.");
+			}
+		} catch (SQLException e) {
+			log.error("Database error during insert operation", e);
+			throw new DatabaseException("Database error", e);
+		}
+	}
+
 	/**
 	 * Executes an INSERT statement and returns the auto-generated primary key.
 	 *

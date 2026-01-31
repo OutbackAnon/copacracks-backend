@@ -257,9 +257,7 @@ public class AppConfigYamlTest {
 					.as("maximumPoolSize should be an integer")
 					.isBetween(1, 1000);
 
-			assertThat(db.minimumIdle())
-					.as("minimumIdle should be a positive integer")
-					.isPositive();
+			assertThat(db.minimumIdle()).as("minimumIdle should be a positive integer").isPositive();
 
 			assertThat(db.connectionTimeout())
 					.as("connectionTimeout should be in milliseconds")
@@ -280,7 +278,7 @@ public class AppConfigYamlTest {
 
 			assertThat(flyway.cleanMigrationOnStart())
 					.as("cleanMigrationOnStart should be true in local")
-                    .isTrue();
+					.isTrue();
 		}
 
 		@Test
